@@ -40,10 +40,10 @@ static Janet cfun_GetBitmapHeaderBuffer(int32_t argc, Janet *argv) {
     return janet_wrap_buffer(data);
 }
 
-static Janet cfun_IsImageReady(int32_t argc, Janet *argv) {
+static Janet cfun_IsImageValid(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 1);
     Image image = *jaylib_getimage(argv, 0);
-    if (IsImageReady(image)) {
+    if (IsImageValid(image)) {
         return janet_wrap_true();
     } else {
         return janet_wrap_false();
@@ -81,10 +81,10 @@ static Janet cfun_LoadTexture(int32_t argc, Janet *argv) {
     return janet_wrap_abstract(texture);
 }
 
-static Janet cfun_IsTextureReady(int32_t argc, Janet *argv) {
+static Janet cfun_IsTextureValid(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 1);
     Texture2D texture = *jaylib_gettexture2d(argv, 0);
-    if (IsTextureReady(texture)) {
+    if (IsTextureValid(texture)) {
         return janet_wrap_true();
     } else {
         return janet_wrap_false();
@@ -114,8 +114,6 @@ static Janet cfun_LoadTextureCubemap(int32_t argc, Janet *argv) {
         layoutType = CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR;
     } else if (!janet_cstrcmp(kw,  "4x3")) {
         layoutType = CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE;
-    } else if (!janet_cstrcmp(kw, "panorama")) {
-        layoutType = CUBEMAP_LAYOUT_PANORAMA;
     } else {
         janet_panicf("unknown layout type %v", argv[1]);
     }
@@ -136,7 +134,7 @@ static Janet cfun_LoadRenderTexture(int32_t argc, Janet *argv) {
 static Janet cfun_IsRenderTextureReady(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 1);
     RenderTexture texture = *jaylib_getrendertexture(argv, 0);
-    if (IsRenderTextureReady(texture)) {
+    if (IsRenderTextureValid(texture)) {
         return janet_wrap_true();
     } else {
         return janet_wrap_false();
@@ -722,9 +720,9 @@ static const JanetReg image_cfuns[] = {
         "(get-bitmap-header-buffer dimx dimy)\n\n"
         "returns a header for a 24bpp bitmap with dimensions dimx*dimy"
     },
-    {"image-ready?", cfun_IsImageReady,
-        "(image-ready? image)\n\n"
-        "Check if an image is ready"
+    {"image-valid?", cfun_IsImageValid,
+        "(image-valid? image)\n\n"
+        "Check if an image is valid"
     },
     {"export-image", cfun_ExportImage, 
         "(export-image image file-name)\n\n"
@@ -738,9 +736,9 @@ static const JanetReg image_cfuns[] = {
         "(load-texture file-name)\n\n"
         "Load texture from file into GPU memory (VRAM)"
     },
-    {"texture-ready?", cfun_IsTextureReady,
-        "(texture-ready? texture)\n\n"
-        "Check if a texture is ready"
+    {"texture-valid?", cfun_IsTextureValid,
+        "(texture-valid? texture)\n\n"
+        "Check if a texture is valid"
     },
     {"load-texture-from-image", cfun_LoadTextureFromImage,  
         "(load-texture-from-image image)\n\n"

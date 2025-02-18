@@ -273,9 +273,8 @@ static Janet cfun_DrawRectangleRoundedLines(int32_t argc, Janet *argv) {
     Rectangle rec = jaylib_getrect(argv, 0);
     float roundness = (float) janet_getnumber(argv, 1);
     int segments = janet_getinteger(argv, 2);
-    int lineThick = janet_getinteger(argv, 3);
-    Color color = jaylib_getcolor(argv, 4);
-    DrawRectangleRoundedLines(rec, roundness, segments, lineThick, color);
+    Color color = jaylib_getcolor(argv, 3);
+    DrawRectangleRoundedLines(rec, roundness, segments, color);
     return janet_wrap_nil();
 }
 

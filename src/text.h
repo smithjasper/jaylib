@@ -31,10 +31,10 @@ static Janet cfun_LoadFont(int32_t argc, Janet *argv) {
     return janet_wrap_abstract(font);
 }
 
-static Janet cfun_IsFontReady(int32_t argc, Janet *argv) {
+static Janet cfun_IsFontValid(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 1);
     Font font = *jaylib_getfont(argv, 0);
-    if (IsFontReady(font)) {
+    if (IsFontValid(font)) {
         return janet_wrap_true();
     } else {
         return janet_wrap_false();
@@ -199,9 +199,9 @@ static JanetReg text_cfuns[] = {
         "(load-font file-name)\n\n"
         "Load font from file into GPU memory (VRAM)"
     },
-    {"font-ready?", cfun_IsFontReady,
-        "(font-ready? font)\n\n"
-        "Check if a font is ready"
+    {"font-valid?", cfun_IsFontValid,
+        "(font-valid? font)\n\n"
+        "Check if a font is valid"
     },
     {"load-font-ex", cfun_LoadFontEx,
         "(load-font-ex file-name font-size &opt font-chars)\n\n"

@@ -1,4 +1,4 @@
-( declare-project
+(declare-project
   :name "jaylib"
   :description "Janet bindings to Raylib"
   :url "https://github.com/janet-lang/jaylib"
@@ -13,7 +13,7 @@
     # you might need to edit ./raylib/src/external/glfw/src/x11_init.c:1124
     # to match /usr/X11R6/lib/libX11.so*
     :openbsd '["-Iraylib/src" "-Iraylib/src/external/glfw/include" "-I/usr/X11R6/include" "-Du_char=unsigned char" "-Dalloca(x)=malloc(x)"]
-    #default
+    # default
     '["-Iraylib/src" "-Iraylib/src/external/glfw/include"]))
 
 (def lflags
@@ -35,7 +35,8 @@
             "_DARWIN_C_SOURCE" (if (= o :macos) "1" nil)
             "_GNU_SOURCE" true
             "SUPPORT_FILEFORMAT_BMP" true
-            "STB_IMAGE_IMPLEMENTATION" true}
+            "STB_IMAGE_IMPLEMENTATION" true
+            "_GLFW_X11" (if (= o :linux) true nil)}
 
   :source ["src/main.c"
            # raylib sources
