@@ -272,14 +272,6 @@ static Janet cfun_SetClipboardText(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
-static Janet cfun_GetClipboardImage(int32_t argc, Janet *argv) {
-    (void) argv;
-    janet_fixarity(argc, 0);
-    Image *image = janet_abstract(&AT_Image, sizeof(Image));
-    *image = GetClipboardImage();
-    return janet_wrap_abstract(image);
-}
-
 static Janet cfun_EnableEventWaiting(int32_t argc, Janet *argv) {
     (void) argv;
     janet_fixarity(argc, 0);
@@ -923,6 +915,14 @@ static Janet cfun_EndScissorMode(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
+static Janet cfun_GetClipboardImage(int32_t argc, Janet *argv) {
+    (void) argv;
+    janet_fixarity(argc, 0);
+    Image *image = janet_abstract(&AT_Image, sizeof(Image));
+    *image = GetClipboardImage();
+    return janet_wrap_abstract(image);
+}
+
 static Janet cfun_MakeDirectory(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 1);
     const char *dirPath = janet_getcstring(argv, 0);
@@ -964,6 +964,49 @@ static Janet cfun_IsFileNameValid(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 1);
     const char *filename = janet_getcstring(argv, 0);
     return janet_wrap_boolean(IsFileNameValid(filename));
+}
+
+static Janet cfun_GetScreenToWorldRay(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 2);
+    Vector2 position = jaylib_unwrap_vec2(argv[0]);
+    Camera *camera = jaylib_getcamera3d(argv, 1);
+    Ray result = GetScreenToWorldRay(position, *camera);
+    return jaylib_wrap_ray(result);
+}
+
+static Janet cfun_GetScreenToWorldRayEx(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 4);
+    Vector2 position = jaylib_unwrap_vec2(argv[0]);
+    Camera *camera = jaylib_getcamera3d(argv, 1);
+    int width = janet_getinteger(argv, 2);
+    int height = janet_getinteger(argv, 3);
+    Ray result = GetScreenToWorldRayEx(position, *camera, width, height);
+    return jaylib_wrap_ray(result);
+}
+
+static Janet cfun_GetApplicationDirectory(int32_t argc, Janet *argv) {
+    (void)argv;
+    janet_fixarity(argc, 0);
+    return janet_wrap_string(GetApplicationDirectory());
+}
+
+static Janet cfun_LoadDirectoryFilesEx(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 3);
+    const char *basepath = janet_getcstring(argv, 0);
+    const char *filter = janet_getcstring(argv, 1);
+    bool scansubdirs = janet_getboolean(argv, 2);
+    FilePathList files = LoadDirectoryFilesEx(basepath, filter, scansubdirs);
+    JanetArray *array = janet_array(0);
+    for (int i = 0; i < files.count; ++i) {
+        janet_array_push(array, janet_cstringv(files.paths[i]));
+    }
+    return janet_wrap_array(array);
+}
+
+static Janet cfun_GetFileNameWithoutExt(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 1);
+    const char *filepath = janet_getcstring(argv, 0);
+    return janet_wrap_string(GetFileNameWithoutExt(filepath));
 }
 
 static JanetReg core_cfuns[] = {
@@ -1121,11 +1164,6 @@ static JanetReg core_cfuns[] = {
         "set-clipboard-text", cfun_SetClipboardText,
         "(set-clipboard-text text)\n\n"
         "Set clipboard text content"
-    },
-    {
-        "get-clipboard-image", cfun_GetClipboardImage,
-        "(get-clipboard-image)\n\n"
-        "Get clipboard image content"
     },
     {
         "enable-event-waiting", cfun_EnableEventWaiting,
@@ -1476,6 +1514,11 @@ static JanetReg core_cfuns[] = {
         "Ends scissor mode. See `begin-scissor-mode`."
     },
     {
+        "get-clipboard-image", cfun_GetClipboardImage,
+        "(get-clipboard-image)\n\n"
+        "Get clipboard image content"
+    },
+    {
         "make-directory", cfun_MakeDirectory,
         "(make-directory dirpath)\n\n"
         "Creates directory, supporting recursive directory creation."
@@ -1499,6 +1542,31 @@ static JanetReg core_cfuns[] = {
         "file-name-valid?", cfun_IsFileNameValid,
         "(file-name-valid? filename)\n\n"
         "Check if filename is valid for platform/OS."
+    },
+    {
+        "get-screen-to-world-ray", cfun_GetScreenToWorldRay,
+        "(get-screen-to-world-ray position camera)\n\n"
+        "Get a ray trace from screen position."
+    },
+    {
+        "get-screen-to-world-ray-ex", cfun_GetScreenToWorldRayEx,
+        "(get-screen-to-world-ray-ex position camera width height)\n\n"
+        "Get a ray trace from screen position."
+    },
+    {
+        "get-application-directory", cfun_GetApplicationDirectory,
+        "(get-application-directory)\n\n",
+        "Get the directory of the running application."
+    },
+    {
+        "load-directory-files-ex", cfun_LoadDirectoryFilesEx,
+        "(load-directory-files-ex basepath filter scansubdirs)\n\n"
+        "Load directory filepaths with extension filtering and recursive directory scan."
+    },
+    {
+        "get-file-name-without-ext", cfun_GetFileNameWithoutExt,
+        "(get-file-name-without-ext filepath)\n\n"
+        "Get filename string without extension."
     },
     {NULL, NULL, NULL}
 };
