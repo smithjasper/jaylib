@@ -52,34 +52,29 @@ static Janet cfun_SetShaderValue(int32_t argc, Janet *argv) {
     int locIndex = janet_getinteger(argv, 1);
     int uniformType = jaylib_getuniformtype(argv, 3);
     switch (uniformType) {
-        case SHADER_UNIFORM_FLOAT:
-        {
+        case SHADER_UNIFORM_FLOAT: {
             float valueFloat = (float) janet_getnumber(argv, 2);
-            SetShaderValue(*shader, locIndex, (const void*) &valueFloat, uniformType);
+            SetShaderValue(*shader, locIndex, (const void *) &valueFloat, uniformType);
             break;
         }
-        case SHADER_UNIFORM_INT:
-        {
+        case SHADER_UNIFORM_INT: {
             int valueInt = janet_getinteger(argv, 2);
-            SetShaderValue(*shader, locIndex, (const void*) &valueInt, uniformType);
+            SetShaderValue(*shader, locIndex, (const void *) &valueInt, uniformType);
             break;
         }
-        case SHADER_UNIFORM_VEC2:
-        {
+        case SHADER_UNIFORM_VEC2: {
             Vector2 valueVec2 = jaylib_getvec2(argv, 2);
-            SetShaderValue(*shader, locIndex, (const void*) &valueVec2, uniformType);
+            SetShaderValue(*shader, locIndex, (const void *) &valueVec2, uniformType);
             break;
         }
-        case SHADER_UNIFORM_VEC3:
-        {
+        case SHADER_UNIFORM_VEC3: {
             Vector3 valueVec3 = jaylib_getvec3(argv, 2);
-            SetShaderValue(*shader, locIndex, (const void*) &valueVec3, uniformType);
+            SetShaderValue(*shader, locIndex, (const void *) &valueVec3, uniformType);
             break;
         }
-        case SHADER_UNIFORM_VEC4:
-        {
+        case SHADER_UNIFORM_VEC4: {
             Vector4 valueVec4 = jaylib_getvec4(argv, 2);
-            SetShaderValue(*shader, locIndex, (const void*) &valueVec4, uniformType);
+            SetShaderValue(*shader, locIndex, (const void *) &valueVec4, uniformType);
             break;
         }
         default:
@@ -90,27 +85,33 @@ static Janet cfun_SetShaderValue(int32_t argc, Janet *argv) {
 }
 
 static JanetReg shader_cfuns[] = {
-    {"load-shader", cfun_LoadShader,
+    {
+        "load-shader", cfun_LoadShader,
         "(loader-shader vertex-shader fragment-shader)\n\n"
         "Load shader from files and bind default locations"
     },
-    {"unload-shader", cfun_UnloadShader,
+    {
+        "unload-shader", cfun_UnloadShader,
         "(unloader-shader shader)\n\n"
         "Unload shader from GPU memory (VRAM)"
     },
-    {"begin-shader-mode", cfun_BeginShaderMode,
+    {
+        "begin-shader-mode", cfun_BeginShaderMode,
         "(begin-shader-mode shader)\n\n"
         "Begin custom shader drawing"
     },
-    {"end-shader-mode", cfun_EndShaderMode,
+    {
+        "end-shader-mode", cfun_EndShaderMode,
         "(end-shader-mode)\n\n"
         "End custom shader drawing (use default shader)"
     },
-    {"get-shader-location", cfun_GetShaderLocation,
+    {
+        "get-shader-location", cfun_GetShaderLocation,
         "(set-shader-location shader uniform-name)\n\n"
         "Get shader uniform location"
     },
-    {"set-shader-value", cfun_SetShaderValue,
+    {
+        "set-shader-value", cfun_SetShaderValue,
         "(set-shader-value shader loc-index value uniform-type)\n\n"
         "Set shader uniform value"
     },

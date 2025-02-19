@@ -345,7 +345,7 @@ static Janet cfun_CheckCollisionCircles(int32_t argc, Janet *argv) {
     Vector2 center1 = jaylib_getvec2(argv, 0);
     float radius1 = (float) janet_getnumber(argv, 1);
     Vector2 center2 = jaylib_getvec2(argv, 2);
-    float radius2 =  (float) janet_getnumber(argv, 3);
+    float radius2 = (float) janet_getnumber(argv, 3);
     if (CheckCollisionCircles(center1, radius1, center2, radius2)) {
         return janet_wrap_true();
     } else {
@@ -460,168 +460,209 @@ static Janet cfun_GetCollisionRec(int32_t argc, Janet *argv) {
 }
 
 static JanetReg shapes_cfuns[] = {
-    {"draw-pixel", cfun_DrawPixel, 
+    {
+        "draw-pixel", cfun_DrawPixel,
         "(draw-pixel pos-x pos-y color)\n\n"
         "Draw a pixel"
     },
-    {"draw-pixel-v", cfun_DrawPixelV, 
+    {
+        "draw-pixel-v", cfun_DrawPixelV,
         "(draw-pixel-v [pos-x pos-y] color)\n\n"
         "Draw a pixel (Vector version)"
     },
-    {"draw-line", cfun_DrawLine, 
+    {
+        "draw-line", cfun_DrawLine,
         "(draw-line start-pos-x start-pos-y end-pos-x end-pos-y color)\n\n"
         "Draw a line"
     },
-    {"draw-line-v", cfun_DrawLineV, 
+    {
+        "draw-line-v", cfun_DrawLineV,
         "(draw-line-v [start-pos-x start-pos-y] [end-pos-x end-pos-y] color)\n\n"
         "Draw a line (Vector version)"
     },
-    {"draw-line-ex", cfun_DrawLineEx, 
+    {
+        "draw-line-ex", cfun_DrawLineEx,
         "(draw-line-ex [start-pos-x start-pos-y] [end-pos-x end-pos-y] thick color)\n\n"
         "Draw a line defining thickness"
     },
-    {"draw-line-bezier", cfun_DrawLineBezier, 
+    {
+        "draw-line-bezier", cfun_DrawLineBezier,
         "(draw-line-bezier [start-pos-x start-pos-y] [end-pos-x end-pos-y] thick color)\n\n"
         "Draw a line using cubic-bezier curves in-out"
     },
-    {"draw-line-strip", cfun_DrawLineStrip, 
+    {
+        "draw-line-strip", cfun_DrawLineStrip,
         "(draw-line-strip [a b] points-count color)\n\n"
         "Draw lines sequence"
     },
-    {"draw-circle", cfun_DrawCircle, 
+    {
+        "draw-circle", cfun_DrawCircle,
         "(draw-circle center-x center-y radius color)\n\n"
         "Draw a color-filled circle"
     },
-    {"draw-circle-sector", cfun_DrawCircleSector, 
+    {
+        "draw-circle-sector", cfun_DrawCircleSector,
         "(draw-circle-sector [pos-x pos-y] radius start-angle end-angle segments color)\n\n"
         "Draw a piece of a circle"
     },
-    {"draw-circle-sector-lines", cfun_DrawCircleSectorLines, 
+    {
+        "draw-circle-sector-lines", cfun_DrawCircleSectorLines,
         "(draw-circle-sector-lines [pos-x pos-y] radius start-angle end-angle segments color)\n\n"
         "Draw circle sector outline"
     },
-    {"draw-circle-v", cfun_DrawCircleV, 
+    {
+        "draw-circle-v", cfun_DrawCircleV,
         "(draw-circle-v [pos-x pos-y] radius color)\n\n"
         "Draw a color-filled circle (Vector version)"
     },
-    {"draw-circle-gradient", cfun_DrawCircleGradient, 
+    {
+        "draw-circle-gradient", cfun_DrawCircleGradient,
         "(draw-circle-gradient center-x center-y radius color-1 color-2)\n\n"
         "Draw a gradient-filled circle"
     },
-    {"draw-circle-lines", cfun_DrawCircleLines, 
+    {
+        "draw-circle-lines", cfun_DrawCircleLines,
         "(draw-circle-lines center-x center-y radius color)\n\n"
         "Draw circle outline"
     },
-    {"draw-ring", cfun_DrawRing, 
+    {
+        "draw-ring", cfun_DrawRing,
         "(draw-ring [pos-x pos-y] inner-radius outer-radius start-angle end-angle segments color)\n\n"
         "Draw ring"
     },
-    {"draw-ring-lines", cfun_DrawRingLines, 
+    {
+        "draw-ring-lines", cfun_DrawRingLines,
         "(draw-ring-lines [pos-x pos-y] inner-radius outer-radius start-angle end-angle segments color)\n\n"
         "Draw ring outline"
     },
-    {"draw-rectangle", cfun_DrawRectangle, 
+    {
+        "draw-rectangle", cfun_DrawRectangle,
         "(draw-rectangle pos-x pos-y width height color)\n\n"
         "Draw a color-filled rectangle"
     },
-    {"draw-rectangle-v", cfun_DrawRectangleV, 
+    {
+        "draw-rectangle-v", cfun_DrawRectangleV,
         "(draw-rectangle-v [pos-x pos-y] [width height] color)\n\n"
         "Draw a color-filled rectangle (Vector version)"
     },
-    {"draw-rectangle-rec", cfun_DrawRectangleRec, 
+    {
+        "draw-rectangle-rec", cfun_DrawRectangleRec,
         "(draw-rectangle-rec rec color)\n\n"
         "Draw a color-filled rectangle"
     },
-    {"draw-rectangle-pro", cfun_DrawRectanglePro, 
+    {
+        "draw-rectangle-pro", cfun_DrawRectanglePro,
         "(draw-rectangle-pro rec origin rotation color)\n\n"
         "Draw a color-filled rectangle with pro parameters"
     },
-    {"draw-rectangle-gradient-v", cfun_DrawRectangleGradientV, 
+    {
+        "draw-rectangle-gradient-v", cfun_DrawRectangleGradientV,
         "(draw-rectangle-gradient-v pos-x pos-y width height color-1 color-2)\n\n"
         "Draw a vertical-gradient-filled rectangle"
     },
-    {"draw-rectangle-gradient-h", cfun_DrawRectangleGradientH, 
+    {
+        "draw-rectangle-gradient-h", cfun_DrawRectangleGradientH,
         "(draw-rectangle-gradient-h pos-x pos-y width height color-1 color-2)\n\n"
         "Draw a horizontal-gradient-filled rectangle"
     },
-    {"draw-rectangle-gradient-ex", cfun_DrawRectangleGradientEx, 
+    {
+        "draw-rectangle-gradient-ex", cfun_DrawRectangleGradientEx,
         "(draw-rectangle-gradient-ex rec color-1 color-2 color-3 color-4)\n\n"
         "Draw a gradient-filled rectangle with custom vertex colors"
     },
-    {"draw-rectangle-lines", cfun_DrawRectangleLines, 
+    {
+        "draw-rectangle-lines", cfun_DrawRectangleLines,
         "(draw-rectangle-lines pos-x pos-y width height color)\n\n"
         "Draw rectangle outline"
     },
-    {"draw-rectangle-lines-ex", cfun_DrawRectangleLinesEx, 
+    {
+        "draw-rectangle-lines-ex", cfun_DrawRectangleLinesEx,
         "(draw-rectangle-lines-ex rec line-thick color)\n\n"
         "Draw rectangle outline with extended parameters"
     },
-    {"draw-rectangle-rounded", cfun_DrawRectangleRounded, 
+    {
+        "draw-rectangle-rounded", cfun_DrawRectangleRounded,
         "(draw-rectangle-rounded rec roundness segments color)\n\n"
         "Draw rectangle with rounded edges"
     },
-    {"draw-rectangle-rounded-lines", cfun_DrawRectangleRoundedLines, 
+    {
+        "draw-rectangle-rounded-lines", cfun_DrawRectangleRoundedLines,
         "(draw-rectangle-rounded-lines rec roundness segments line-thick color)\n\n"
         "Draw rectangle with rounded edges outline"
     },
-    {"draw-triangle", cfun_DrawTriangle, 
+    {
+        "draw-triangle", cfun_DrawTriangle,
         "(draw-triangle [x1 y1] [x2 y2] [x3 y3] color)\n\n"
         "Draw a color-filled triangle (vertex in counter-clockwise order!)"
     },
-    {"draw-triangle-lines", cfun_DrawTriangleLines, 
+    {
+        "draw-triangle-lines", cfun_DrawTriangleLines,
         "(draw-triangle-lines [x1 y1] [x2 y2] [x3 y3] color)\n\n"
         "Draw triangle outline (vertex in counter-clockwise order!)"
     },
-    {"draw-triangle-fan", cfun_DrawTriangleFan, 
+    {
+        "draw-triangle-fan", cfun_DrawTriangleFan,
         "(draw-triangle-fan [x y] points-count color)\n\n"
         "Draw a triangle fan defined by points (first vertex is the center)"
     },
-    {"draw-triangle-strip", cfun_DrawTriangleStrip, 
+    {
+        "draw-triangle-strip", cfun_DrawTriangleStrip,
         "(draw-triangle-strip [x y] points-count color)\n\n"
         "Draw a triangle strip defined by points"
     },
-    {"draw-poly", cfun_DrawPoly, 
+    {
+        "draw-poly", cfun_DrawPoly,
         "(draw-poly [pos-x pos-y] sides radius rotation color)\n\n"
         "Draw a regular polygon (Vector version)"
     },
-    {"check-collision-recs", cfun_CheckCollisionRecs, 
+    {
+        "check-collision-recs", cfun_CheckCollisionRecs,
         "(check-collision-recs rec-1 rec-2)\n\n"
         "Check collision between two rectangles"
     },
-    {"check-collision-circles", cfun_CheckCollisionCircles, 
+    {
+        "check-collision-circles", cfun_CheckCollisionCircles,
         "(check-collision-circles [x1 y1] r1 [x2 y2] r2)\n\n"
         "Check collision between two circles"
     },
-    {"check-collision-circle-rec", cfun_CheckCollisionCircleRec, 
+    {
+        "check-collision-circle-rec", cfun_CheckCollisionCircleRec,
         "(check-collision-circle-rec [x y] radius rec)\n\n"
         "Check collision between circle and rectangle"
     },
-    {"check-collision-point-rec", cfun_CheckCollisionPointRec, 
+    {
+        "check-collision-point-rec", cfun_CheckCollisionPointRec,
         "(check-collision-point-rec [x y] rec)\n\n"
         "Check if point is inside rectangle"
     },
-    {"check-collision-point-circle", cfun_CheckCollisionPointCircle, 
+    {
+        "check-collision-point-circle", cfun_CheckCollisionPointCircle,
         "(check-collision-point-circle [px py] [cx cy] r)\n\n"
         "Check if point is inside circle"
     },
-    {"check-collision-point-triangle", cfun_CheckCollisionPointTriangle, 
+    {
+        "check-collision-point-triangle", cfun_CheckCollisionPointTriangle,
         "(check-collision-point-triangle [px py] [x1 y1] [x2 y2] [x3 y3])\n\n"
         "Check if point is inside a triangle"
     },
-    {"check-collision-point-poly", cfun_CheckCollisionPointPoly, 
+    {
+        "check-collision-point-poly", cfun_CheckCollisionPointPoly,
         "(check-collision-point-poly [x y] vertices)\n\n"
         "Check if point is inside a polygon defined by the list of vertices"
     },
-    {"check-collision-lines", cfun_CheckCollisionLines, 
+    {
+        "check-collision-lines", cfun_CheckCollisionLines,
         "(check-collision-lines [start-x1 start-y1] [end-x1 end-y1] [start-x2 start-y2] [end-x2 end-y2] [ret-x ret-y])\n\n"
         "Check the collision between two lines defined by two points each, returns collision point"
     },
-    {"check-collision-point-line", cfun_CheckCollisionPointLine, 
+    {
+        "check-collision-point-line", cfun_CheckCollisionPointLine,
         "(check-collision-point-line [px py] [start-x start-y] [end-x end-y] threshold)\n\n"
         "Check if point belongs to line created between two points [p1] "
         "and [p2] with defined margin in pixels [threshold]"
     },
-    {"get-collision-rec", cfun_GetCollisionRec, 
+    {
+        "get-collision-rec", cfun_GetCollisionRec,
         "(get-collision-rec rec1 rec2)\n\n"
         "Get collision rectangle for two rectangles collision"
     },

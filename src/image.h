@@ -10,7 +10,7 @@ static Janet cfun_LoadImage(int32_t argc, Janet *argv) {
 static Janet cfun_LoadImageFromBuffer(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 2);
     const char *fileType = janet_getcstring(argv, 0);
-    JanetBuffer* data = janet_getbuffer(argv, 1);
+    JanetBuffer *data = janet_getbuffer(argv, 1);
     Image *image = janet_abstract(&AT_Image, sizeof(Image));
     *image = LoadImageFromMemory(fileType, data->data, data->count);
     return janet_wrap_abstract(image);
@@ -26,7 +26,7 @@ static Janet cfun_GetBitmapHeaderBuffer(int32_t argc, Janet *argv) {
     const int16_t bpp = 24;
     const int32_t filesize = headerlength + (sizeX * sizeY);
 
-    JanetBuffer* data = janet_buffer(filesize);
+    JanetBuffer *data = janet_buffer(filesize);
     janet_buffer_push_cstring(data, "BM");
     janet_buffer_push_u32(data, filesize);
     janet_buffer_push_u32(data, 0); // should be two int16, reserved.
@@ -179,11 +179,11 @@ static Janet cfun_LoadImageFromScreen(int32_t argc, Janet *argv) {
 }
 
 static Janet cfun_GetRenderTextureTexture2d(int32_t argc, Janet *argv) {
-  janet_fixarity(argc, 1);
-  RenderTexture renderTexture = *jaylib_getrendertexture(argv, 0);
-  Texture2D *texture = janet_abstract(&AT_Texture2D, sizeof(Texture2D));
-  *texture = renderTexture.texture;
-  return janet_wrap_abstract(texture);
+    janet_fixarity(argc, 1);
+    RenderTexture renderTexture = *jaylib_getrendertexture(argv, 0);
+    Texture2D *texture = janet_abstract(&AT_Texture2D, sizeof(Texture2D));
+    *texture = renderTexture.texture;
+    return janet_wrap_abstract(texture);
 }
 
 static Janet cfun_ImageCopy(int32_t argc, Janet *argv) {
@@ -676,8 +676,8 @@ static Janet cfun_GetImageDimensions(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 1);
     Image *src = jaylib_getimage(argv, 0);
     Vector2 dim = {
-      src->width,
-      src->height
+        src->width,
+        src->height
     };
     return jaylib_wrap_vec2(dim);
 }
@@ -708,279 +708,348 @@ RLAPI void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle
 */
 
 static const JanetReg image_cfuns[] = {
-    {"load-image-1", cfun_LoadImage, 
+    {
+        "load-image-1", cfun_LoadImage,
         "(load-image-1 file-name)\n\n"
         "Load image from file into CPU memory (RAM)"
     }, // load-image is janet core function, don't want to overwrite if we use (use jaylib)
-    {"load-image-from-buffer", cfun_LoadImageFromBuffer, 
+    {
+        "load-image-from-buffer", cfun_LoadImageFromBuffer,
         "(load-image-from-buffer file-type buffer)\n\n"
         "Load buffer as image object"
     },
-    {"get-bitmap-header-buffer", cfun_GetBitmapHeaderBuffer, 
+    {
+        "get-bitmap-header-buffer", cfun_GetBitmapHeaderBuffer,
         "(get-bitmap-header-buffer dimx dimy)\n\n"
         "returns a header for a 24bpp bitmap with dimensions dimx*dimy"
     },
-    {"image-valid?", cfun_IsImageValid,
+    {
+        "image-valid?", cfun_IsImageValid,
         "(image-valid? image)\n\n"
         "Check if an image is valid"
     },
-    {"export-image", cfun_ExportImage, 
+    {
+        "export-image", cfun_ExportImage,
         "(export-image image file-name)\n\n"
         "Export image data to file, returns true on success"
     },
-    {"export-image-as-code", cfun_ExportImageAsCode, 
+    {
+        "export-image-as-code", cfun_ExportImageAsCode,
         "(export-image-as-code image file-name)\n\n"
         "Export image as code file defining an array of bytes, returns true on success"
     },
-    {"load-texture", cfun_LoadTexture, 
+    {
+        "load-texture", cfun_LoadTexture,
         "(load-texture file-name)\n\n"
         "Load texture from file into GPU memory (VRAM)"
     },
-    {"texture-valid?", cfun_IsTextureValid,
+    {
+        "texture-valid?", cfun_IsTextureValid,
         "(texture-valid? texture)\n\n"
         "Check if a texture is valid"
     },
-    {"load-texture-from-image", cfun_LoadTextureFromImage,  
+    {
+        "load-texture-from-image", cfun_LoadTextureFromImage,
         "(load-texture-from-image image)\n\n"
         "Load texture from image data"
     },
-    {"load-texture-cubemap", cfun_LoadTextureCubemap, 
+    {
+        "load-texture-cubemap", cfun_LoadTextureCubemap,
         "(load-texture-cubemap image layout)\n\n"
         "Load cubemap from image, multiple image cubemap layouts supported"
     },
-    {"load-render-texture", cfun_LoadRenderTexture, 
+    {
+        "load-render-texture", cfun_LoadRenderTexture,
         "(load-render-texture width height)\n\n"
         "Load texture for rendering (framebuffer)"
     },
-    {"render-texture-ready?", cfun_IsRenderTextureReady,
+    {
+        "render-texture-ready?", cfun_IsRenderTextureReady,
         "(render-texture-ready? texture)\n\n"
         "Check if a render texture is ready"
     },
-    {"unload-image", cfun_UnloadImage, 
+    {
+        "unload-image", cfun_UnloadImage,
         "(unload-image image)\n\n"
         "Unload image from CPU memory (RAM)"
     },
-    {"unload-texture", cfun_UnloadTexture, 
+    {
+        "unload-texture", cfun_UnloadTexture,
         "(unload-texture texture)\n\n"
         "Unload texture from GPU memory (VRAM)"
     },
-    {"unload-render-texture", cfun_UnloadRenderTexture, 
+    {
+        "unload-render-texture", cfun_UnloadRenderTexture,
         "(unload-render-texture target)\n\n"
         "Unload render texture from GPU memory (VRAM)"
     },
-    {"get-image-dimensions", cfun_GetImageDimensions, 
+    {
+        "get-image-dimensions", cfun_GetImageDimensions,
         "(get-image-dimensions image)\n\n"
         "Get image dimensions."
     },
-    {"load-image-from-texture", cfun_LoadImageFromTexture, 
+    {
+        "load-image-from-texture", cfun_LoadImageFromTexture,
         "(load-image-from-texture texture)\n\n"
         "Load image from GPU texture data"
     },
-    {"load-image-from-screen", cfun_LoadImageFromScreen, 
+    {
+        "load-image-from-screen", cfun_LoadImageFromScreen,
         "(load-image-from-screen)\n\n"
         "Load image from screen buffer and (screenshot)"
     },
-    {"get-render-texture-texture2d", cfun_GetRenderTextureTexture2d, 
+    {
+        "get-render-texture-texture2d", cfun_GetRenderTextureTexture2d,
         "(get-render-texture-texture2d texture)\n\n"
         "Load texture for rendering (framebuffer)"
     },
-    {"image-copy", cfun_ImageCopy, 
+    {
+        "image-copy", cfun_ImageCopy,
         "(image-copy image)\n\n"
         "Create an image duplicate (useful for transformations)"
     },
-    {"image-from-image", cfun_ImageFromImage, 
+    {
+        "image-from-image", cfun_ImageFromImage,
         "(image-from-image image rec)\n\n"
         "Create an image from another image piece"
     },
-    {"image-to-pot", cfun_ImageToPOT, 
+    {
+        "image-to-pot", cfun_ImageToPOT,
         "(image-to-pot image fill)\n\n"
         "Convert image to POT (power-of-two)"
     },
-    {"image-format", cfun_ImageFormat, 
+    {
+        "image-format", cfun_ImageFormat,
         "(image-format image new-format)\n\n"
         "Convert image data to desired format"
     },
-    {"image-alpha-mask", cfun_ImageAlphaMask, 
+    {
+        "image-alpha-mask", cfun_ImageAlphaMask,
         "(image-alpha-mask image alpha-mask)\n\n"
         "Apply alpha mask to image"
     },
-    {"image-alpha-clear", cfun_ImageAlphaClear, 
+    {
+        "image-alpha-clear", cfun_ImageAlphaClear,
         "(image-alpha-clear image clear threshold)\n\n"
         "Clear alpha channel to desired color"
     },
-    {"image-alpha-crop", cfun_ImageAlphaCrop, 
+    {
+        "image-alpha-crop", cfun_ImageAlphaCrop,
         "(image-alpha-crop image threshold)\n\n"
         "Crop image depending on alpha value"
     },
-    {"image-alpha-premultiply", cfun_ImageAlphaPremultiply, 
+    {
+        "image-alpha-premultiply", cfun_ImageAlphaPremultiply,
         "(image-alpha-premultiply image)\n\n"
         "Premultiply alpha channel"
     },
-    {"image-crop", cfun_ImageCrop, 
+    {
+        "image-crop", cfun_ImageCrop,
         "(image-crop image crop)\n\n"
         "Crop an image to a defined rectangle"
     },
-    {"image-resize", cfun_ImageResize, 
+    {
+        "image-resize", cfun_ImageResize,
         "(image-resize image new-width new-height)\n\n"
         "Resize image (Bicubic scaling algorithm)"
     },
-    {"image-resize-nn", cfun_ImageResizeNN, 
+    {
+        "image-resize-nn", cfun_ImageResizeNN,
         "(image-resize-nn image new-width new-height)\n\n"
         "Resize image (Nearest-Neighbor scaling algorithm)"
     },
-    {"image-resize-canvas", cfun_ImageResizeCanvas, 
+    {
+        "image-resize-canvas", cfun_ImageResizeCanvas,
         "(image-resize-canvas image new-width new-height offset-x offset-y fill)\n\n"
         "Resize canvas and fill with color"
     },
-    {"image-mipmaps", cfun_ImageMipmaps, 
+    {
+        "image-mipmaps", cfun_ImageMipmaps,
         "(image-mipmaps image)\n\n"
         "Generate all mipmap levels for a provided image"
     },
-    {"image-dimensions", cfun_ImageDimensions, 
+    {
+        "image-dimensions", cfun_ImageDimensions,
         "(image-dimensions image)\n\n"
         "Get image dimensions"
     },
-    {"image-dither", cfun_ImageDither, 
+    {
+        "image-dither", cfun_ImageDither,
         "(image-dither image r-bpp g-bpp b-bpp a-bpp)\n\n"
         "Dither image data to 16bpp or lower (Floyd-Steinberg dithering)"
     },
-    {"load-image-pallete", cfun_LoadImagePalette, 
+    {
+        "load-image-pallete", cfun_LoadImagePalette,
         "(load-image-pallete image max-palette-size colors-count)\n\n"
         "Load colors palette from image as a Color array (RGBA - 32bit)"
     },
-    {"image-text", cfun_ImageText, 
+    {
+        "image-text", cfun_ImageText,
         "(image-text text font-size color)\n\n"
         "Create an image from text (default font)"
     },
-    {"image-text-ex", cfun_ImageTextEx, 
+    {
+        "image-text-ex", cfun_ImageTextEx,
         "(image-text-ex font text font-size spacing tint)\n\n"
         "Create an image from text (custom sprite font)"
     },
-    {"image-draw", cfun_ImageDraw, 
+    {
+        "image-draw", cfun_ImageDraw,
         "(image-draw dst src src-rec dst-rec tint)\n\n"
         "Draw a source image within a destination image (tint applied to source)"
     },
-    {"image-draw-rectangle-rec", cfun_ImageDrawRectangleRec, 
+    {
+        "image-draw-rectangle-rec", cfun_ImageDrawRectangleRec,
         "(image-draw-rectangle-rec dst rec color)\n\n"
         "Draw rectangle within an image"
     },
-    {"image-draw-rectangle-lines", cfun_ImageDrawRectangleLines, 
+    {
+        "image-draw-rectangle-lines", cfun_ImageDrawRectangleLines,
         "(image-draw-rectangle-lines dst rec thick color)\n\n"
         "Draw rectangle lines within an image"
     },
-    {"image-draw-text", cfun_ImageDrawText, 
+    {
+        "image-draw-text", cfun_ImageDrawText,
         "(image-draw-text dst text pos-x pos-y font-size color)\n\n"
         "Draw text (using default font) within an image (destination)"
     },
-    {"image-draw-text-ex", cfun_ImageDrawTextEx, 
+    {
+        "image-draw-text-ex", cfun_ImageDrawTextEx,
         "(image-draw-text-ex dst font text [pos-x pos-y] font-size spacing tint)\n\n"
         "Draw text (custom sprite font) within an image (destination)"
     },
-    {"image-flip-vertical", cfun_ImageFlipVertical, 
+    {
+        "image-flip-vertical", cfun_ImageFlipVertical,
         "(image-flip-vertical image)\n\n"
         "Flip image vertically"
     },
-    {"image-flip-horizontal", cfun_ImageFlipHorizontal, 
+    {
+        "image-flip-horizontal", cfun_ImageFlipHorizontal,
         "(image-flip-horizontal image)\n\n"
         "Flip image horizontally"
     },
-    {"image-rotate-cw", cfun_ImageRotateCW, 
+    {
+        "image-rotate-cw", cfun_ImageRotateCW,
         "(image-rotate-cw image)\n\n"
         "Rotate image clockwise 90deg"
     },
-    {"image-rotate-ccw", cfun_ImageRotateCCW, 
+    {
+        "image-rotate-ccw", cfun_ImageRotateCCW,
         "(image-rotate-ccw image)\n\n"
         "Rotate image counter-clockwise 90deg"
     },
-    {"image-color-tint", cfun_ImageColorTint, 
+    {
+        "image-color-tint", cfun_ImageColorTint,
         "(image-color-tint image color)\n\n"
         "Modify image color: tint"
     },
-    {"image-color-invert", cfun_ImageColorInvert, 
+    {
+        "image-color-invert", cfun_ImageColorInvert,
         "(image-color-invert image)\n\n"
         "Modify image color: invert"
     },
-    {"image-color-grayscale", cfun_ImageColorGrayscale, 
+    {
+        "image-color-grayscale", cfun_ImageColorGrayscale,
         "(image-color-grayscale image)\n\n"
         "Modify image color: grayscale"
     },
-    {"image-color-brightness", cfun_ImageColorBrightness, 
+    {
+        "image-color-brightness", cfun_ImageColorBrightness,
         "(image-color-brightness image brightness)\n\n"
         "Modify image color: brightness (-255 to 255)"
     },
-    {"image-color-contrast", cfun_ImageColorContrast, 
+    {
+        "image-color-contrast", cfun_ImageColorContrast,
         "(image-color-contrast image contrast)\n\n"
         "Modify image color: contrast (-100 to 100)"
     },
-    {"image-color-replace", cfun_ImageColorReplace, 
+    {
+        "image-color-replace", cfun_ImageColorReplace,
         "(image-color-replace image color replace)\n\n"
         "Modify image color: replace color"
     },
-    {"draw-texture", cfun_DrawTexture, 
+    {
+        "draw-texture", cfun_DrawTexture,
         "(draw-texture texture pos-x pos-y tint)\n\n"
         "Draw a Texture2D"
     },
-    {"draw-texture-v", cfun_DrawTextureV, 
+    {
+        "draw-texture-v", cfun_DrawTextureV,
         "(draw-texture-v texture [pos-x pos-y] tint)\n\n"
         "Draw a Texture2D with position defined as Vector2"
     },
-    {"draw-texture-ex", cfun_DrawTextureEx, 
+    {
+        "draw-texture-ex", cfun_DrawTextureEx,
         "(draw-texture-ex texture [pos-x pos-y] rotation scale tint)\n\n"
         "Draw a Texture2D with extended parameters"
     },
-    {"draw-texture-pro", cfun_DrawTexturePro, 
+    {
+        "draw-texture-pro", cfun_DrawTexturePro,
         "(draw-texture-pro texture source dest origin rotation tint)\n\n"
         "Draw a part of a texture defined by a rectangle with 'pro' parameters"
     },
-    {"draw-texture-rec", cfun_DrawTextureRec, 
+    {
+        "draw-texture-rec", cfun_DrawTextureRec,
         "(draw-texture-rec texture source position tint)\n\n"
         "Draw a part of a texture defined by a rectangle"
     },
-    {"draw-texture-n-patch", cfun_DrawTextureNPatch,
+    {
+        "draw-texture-n-patch", cfun_DrawTextureNPatch,
         "(draw-texture-n-patch texture n-patch-info dest origin rotation tint)\n\n"
         "Draw a texture (or part of it) that stretches or shrinks nicely"
     },
-    {"gen-image-color", cfun_GenImageColor, 
+    {
+        "gen-image-color", cfun_GenImageColor,
         "(gen-image-color width height color)\n\n"
         "Generate image: plain color"
     },
-    {"gen-image-gradient-linear", cfun_GenImageGradientLinear, 
+    {
+        "gen-image-gradient-linear", cfun_GenImageGradientLinear,
         "(gen-image-gradient-linear width height direction start end)\n\n"
         "Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient"
     },
-    {"gen-image-gradient-radial", cfun_GenImageGradientRadial, 
+    {
+        "gen-image-gradient-radial", cfun_GenImageGradientRadial,
         "(gen-image-gradient-radial width height density inner outer)\n\n"
         "Generate image: radial gradient"
     },
-    {"gen-image-gradient-square", cfun_GenImageGradientSquare, 
+    {
+        "gen-image-gradient-square", cfun_GenImageGradientSquare,
         "(gen-image-gradient-square width height density inner outer)\n\n"
         "Generate image: square gradient"
     },
-    {"gen-image-checked", cfun_GenImageChecked, 
+    {
+        "gen-image-checked", cfun_GenImageChecked,
         "(gen-image-checked width height checks-x checks-y color1 color2)\n\n"
         "Generate image: checked"
     },
-    {"gen-image-white-noise", cfun_GenImageWhiteNoise, 
+    {
+        "gen-image-white-noise", cfun_GenImageWhiteNoise,
         "(gen-image-white-noise width height factor)\n\n"
         "Generate image: white noise"
     },
-    {"gen-image-cellular", cfun_GenImageCellular, 
+    {
+        "gen-image-cellular", cfun_GenImageCellular,
         "(gen-image-cellular width height tile-size)\n\n"
         "Generate image: cellular algorithm. Bigger tileSize means bigger cells"
     },
-    {"gen-texture-mipmaps", cfun_GenTextureMipmaps, 
+    {
+        "gen-texture-mipmaps", cfun_GenTextureMipmaps,
         "(gen-texture-mipmaps texture)\n\n"
         "Generate GPU mipmaps for a texture"
     },
-    {"set-texture-filter", cfun_SetTextureFilter, 
+    {
+        "set-texture-filter", cfun_SetTextureFilter,
         "(set-texture-filter texture filter)\n\n"
         "Set texture scaling filter mode"
     },
-    {"set-texture-wrap", cfun_SetTextureWrap, 
+    {
+        "set-texture-wrap", cfun_SetTextureWrap,
         "(set-texture-wrap texture wrap)\n\n"
         "Set texture wrapping mode"
     },
-    {"load-image-from-memory", cfun_LoadImageFromMemory,
+    {
+        "load-image-from-memory", cfun_LoadImageFromMemory,
         "(load-image-from-memory filetype data size)\n\n"
         "Load image from memory buffer, fileType refers to extension: i.e. '.png'"
     },

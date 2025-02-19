@@ -63,18 +63,18 @@ static Janet cfun_IsWindowState(int32_t argc, Janet *argv) {
     const uint8_t *arg_flag = janet_getkeyword(argv, 0);
     int flag = 0;
     for (unsigned j = 0; j < (sizeof(after_init_flag_defs) / sizeof(KeyDef)); j++) {
-      if (!janet_cstrcmp(arg_flag, after_init_flag_defs[j].name)) {
-	flag = after_init_flag_defs[j].key;
-	break;
-      }
+        if (!janet_cstrcmp(arg_flag, after_init_flag_defs[j].name)) {
+            flag = after_init_flag_defs[j].key;
+            break;
+        }
     }
     if (0 == flag) {
-      JanetArray *available = janet_array(0);
-      for (unsigned j = 0; j < (sizeof(after_init_flag_defs) / sizeof(KeyDef)); j++) {
-	janet_array_push(available, janet_ckeywordv(after_init_flag_defs[j].name));
-      }
-      janet_panicf("unknown flag %v - available flags are %p", argv[0],
-		   janet_wrap_array(available));
+        JanetArray *available = janet_array(0);
+        for (unsigned j = 0; j < (sizeof(after_init_flag_defs) / sizeof(KeyDef)); j++) {
+            janet_array_push(available, janet_ckeywordv(after_init_flag_defs[j].name));
+        }
+        janet_panicf("unknown flag %v - available flags are %p", argv[0],
+                     janet_wrap_array(available));
     }
 
     return janet_wrap_boolean(IsWindowState(flag));
@@ -88,8 +88,8 @@ static Janet cfun_SetWindowState(int32_t argc, Janet *argv) {
         /* Linear scan through after_init_flag_defs to find entry for arg_flag */
         unsigned int flag = 0;
         for (unsigned j = 0; j < (sizeof(after_init_flag_defs) / sizeof(KeyDef)); j++) {
-	  if (!janet_cstrcmp(arg_flag, after_init_flag_defs[j].name)) {
-	    flag = (unsigned int) after_init_flag_defs[j].key;
+            if (!janet_cstrcmp(arg_flag, after_init_flag_defs[j].name)) {
+                flag = (unsigned int) after_init_flag_defs[j].key;
                 break;
             }
         }
@@ -99,7 +99,7 @@ static Janet cfun_SetWindowState(int32_t argc, Janet *argv) {
                 janet_array_push(available, janet_ckeywordv(after_init_flag_defs[j].name));
             }
             janet_panicf("unknown flag %v - available flags are %p", argv[i],
-                    janet_wrap_array(available));
+                         janet_wrap_array(available));
         }
         flags |= flag;
     }
@@ -126,7 +126,7 @@ static Janet cfun_ClearWindowState(int32_t argc, Janet *argv) {
                 janet_array_push(available, janet_ckeywordv(after_init_flag_defs[j].name));
             }
             janet_panicf("unknown flag %v - available flags are %p", argv[i],
-                    janet_wrap_array(available));
+                         janet_wrap_array(available));
         }
         flags |= flag;
     }
@@ -272,6 +272,14 @@ static Janet cfun_SetClipboardText(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
+static Janet cfun_GetClipboardImage(int32_t argc, Janet *argv) {
+    (void) argv;
+    janet_fixarity(argc, 0);
+    Image *image = janet_abstract(&AT_Image, sizeof(Image));
+    *image = GetClipboardImage();
+    return janet_wrap_abstract(image);
+}
+
 static Janet cfun_EnableEventWaiting(int32_t argc, Janet *argv) {
     (void) argv;
     janet_fixarity(argc, 0);
@@ -321,9 +329,9 @@ static Janet cfun_DisableCursor(int32_t argc, Janet *argv) {
 }
 
 static Janet cfun_IsCursorOnScreen(int32_t argc, Janet *argv) {
-	(void) argv;
-	janet_fixarity(argc, 0);
-	return janet_wrap_boolean(IsCursorOnScreen());
+    (void) argv;
+    janet_fixarity(argc, 0);
+    return janet_wrap_boolean(IsCursorOnScreen());
 }
 
 static Janet cfun_ClearBackground(int32_t argc, Janet *argv) {
@@ -416,7 +424,7 @@ static Janet cfun_SetConfigFlags(int32_t argc, Janet *argv) {
                 janet_array_push(available, janet_ckeywordv(flag_defs[j].name));
             }
             janet_panicf("unknown flag %v - available flags are %p", argv[i],
-                    janet_wrap_array(available));
+                         janet_wrap_array(available));
         }
         flags |= flag;
     }
@@ -904,7 +912,7 @@ static Janet cfun_BeginScissorMode(int32_t argc, Janet *argv) {
     int y = janet_getinteger(argv, 1);
     int w = janet_getinteger(argv, 2);
     int h = janet_getinteger(argv, 3);
-    BeginScissorMode(x, y, w ,h);
+    BeginScissorMode(x, y, w, h);
     return janet_wrap_nil();
 }
 
@@ -915,387 +923,529 @@ static Janet cfun_EndScissorMode(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
+static Janet cfun_MakeDirectory(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 1);
+    const char *dirPath = janet_getcstring(argv, 0);
+    return janet_wrap_integer(MakeDirectory(dirPath));
+}
+
+static Janet cfun_ComputeSHA1(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 2);
+    unsigned char *data = (unsigned char *)janet_getcstring(argv, 0);
+    int datasize = janet_getinteger(argv, 1);
+    unsigned int *hash = ComputeSHA1(data, datasize);
+    JanetArray *array = janet_array(5);
+    for (int i = 0; i < 5; ++i) {
+        janet_array_push(array, janet_wrap_integer(hash[i]));
+    }
+    return janet_wrap_array(array);
+}
+
+static Janet cfun_ComputeCRC32(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 2);
+    unsigned char *data = (unsigned char *)janet_getcstring(argv, 0);
+    int dataSize = janet_getinteger(argv, 1);
+    return janet_wrap_integer(ComputeCRC32(data, dataSize));
+}
+
+static Janet cfun_ComputeMD5(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 2);
+    unsigned char *data = (unsigned char *)janet_getcstring(argv, 0);
+    int datasize = janet_getinteger(argv, 1);
+    unsigned int *hash = ComputeMD5(data, datasize);
+    JanetArray *array = janet_array(5);
+    for (int i = 0; i < 5; ++i) {
+        janet_array_push(array, janet_wrap_integer(hash[i]));
+    }
+    return janet_wrap_array(array);
+}
+
+static Janet cfun_IsFileNameValid(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 1);
+    const char *filename = janet_getcstring(argv, 0);
+    return janet_wrap_boolean(IsFileNameValid(filename));
+}
+
 static JanetReg core_cfuns[] = {
-    {"init-window", cfun_InitWindow, 
-        "(init-window width height title)\n\n" 
+    {
+        "init-window", cfun_InitWindow,
+        "(init-window width height title)\n\n"
         "Initialize window and OpenGL context"
     },
-    {"window-should-close", cfun_WindowShouldClose, 
-        "(window-should-close)\n\n" 
+    {
+        "window-should-close", cfun_WindowShouldClose,
+        "(window-should-close)\n\n"
         "Check if KEY_ESCAPE pressed or Close icon pressed"
     },
-    {"close-window", cfun_CloseWindow, 
-        "(close-window)\n\n" 
+    {
+        "close-window", cfun_CloseWindow,
+        "(close-window)\n\n"
         "Close window and unload OpenGL context"
     },
-    {"window-ready?", cfun_IsWindowReady, 
-        "(window-ready?)\n\n" 
+    {
+        "window-ready?", cfun_IsWindowReady,
+        "(window-ready?)\n\n"
         "Check if window has been initialized successfully"
     },
-    {"window-minimized?", cfun_IsWindowMinimized, 
-        "(window-minimized?)\n\n" 
+    {
+        "window-minimized?", cfun_IsWindowMinimized,
+        "(window-minimized?)\n\n"
         "Check if window is currently minimized"
     },
-    {"window-focused?", cfun_IsWindowFocused, 
-        "(window-focused?)\n\n" 
+    {
+        "window-focused?", cfun_IsWindowFocused,
+        "(window-focused?)\n\n"
         "Check if window is currently focused"
     },
-    {"window-resized?", cfun_IsWindowResized, 
-        "(window-resized?)\n\n" 
+    {
+        "window-resized?", cfun_IsWindowResized,
+        "(window-resized?)\n\n"
         "Check if window has been resized last frame"
     },
-    {"window-state?", cfun_IsWindowState, 
-        "(window-state? flag)\n\n" 
+    {
+        "window-state?", cfun_IsWindowState,
+        "(window-state? flag)\n\n"
         "Check if one specific window flag is enabled"
     },
-    {"set-window-state", cfun_SetWindowState, 
-        "(set-window-state flags)\n\n" 
+    {
+        "set-window-state", cfun_SetWindowState,
+        "(set-window-state flags)\n\n"
         "Set window configuration state using flags"
     },
-    {"clear-window-state", cfun_ClearWindowState, 
-        "(clear-window-state flags)\n\n" 
+    {
+        "clear-window-state", cfun_ClearWindowState,
+        "(clear-window-state flags)\n\n"
         "Clear window configuration state flags"
     },
-    {"toggle-fullscreen", cfun_ToggleFullscreen, 
-        "(toggle-fullscreen)\n\n" 
+    {
+        "toggle-fullscreen", cfun_ToggleFullscreen,
+        "(toggle-fullscreen)\n\n"
         "Toggle window state: fullscreen/windowed"
     },
-    {"set-window-title", cfun_SetWindowTitle, 
-        "(set-window-title title)\n\n" 
+    {
+        "set-window-title", cfun_SetWindowTitle,
+        "(set-window-title title)\n\n"
         "Set title for window"
     },
-    {"set-window-position", cfun_SetWindowPosition, 
-        "(set-window-position x y)\n\n" 
+    {
+        "set-window-position", cfun_SetWindowPosition,
+        "(set-window-position x y)\n\n"
         "Set window position on screen"
     },
-    {"set-window-monitor", cfun_SetWindowMonitor, 
-        "(set-window-monitor monitor)\n\n" 
+    {
+        "set-window-monitor", cfun_SetWindowMonitor,
+        "(set-window-monitor monitor)\n\n"
         "Set monitor for the current window"
     },
-    {"set-window-min-size", cfun_SetWindowMinSize, 
-        "(set-window-min-size width height)\n\n" 
+    {
+        "set-window-min-size", cfun_SetWindowMinSize,
+        "(set-window-min-size width height)\n\n"
         "Set window minimum dimensions"
     },
-    {"set-window-size", cfun_SetWindowSize, 
-        "(set-window-size width height)\n\n" 
+    {
+        "set-window-size", cfun_SetWindowSize,
+        "(set-window-size width height)\n\n"
         "Set window dimensions"
     },
-    {"set-window-opacity", cfun_SetWindowOpacity,
+    {
+        "set-window-opacity", cfun_SetWindowOpacity,
         "(set-window-opacity opacity)\n\n"
         "Set window opacity [0.0f..1.0f]"
     },
-    {"get-window-handle", cfun_GetWindowHandle, 
-        "(get-window-handle)\n\n" 
+    {
+        "get-window-handle", cfun_GetWindowHandle,
+        "(get-window-handle)\n\n"
         "Get native window handle"
     },
-    {"get-screen-width", cfun_GetScreenWidth, 
-        "(get-screen-width)\n\n" 
+    {
+        "get-screen-width", cfun_GetScreenWidth,
+        "(get-screen-width)\n\n"
         "Get current screen width"
     },
-    {"get-screen-height", cfun_GetScreenHeight, 
-        "(get-screen-height)\n\n" 
+    {
+        "get-screen-height", cfun_GetScreenHeight,
+        "(get-screen-height)\n\n"
         "Get current screen height"
     },
-    {"get-render-width", cfun_GetRenderWidth, 
-        "(get-render-width)\n\n" 
+    {
+        "get-render-width", cfun_GetRenderWidth,
+        "(get-render-width)\n\n"
         "Get current render width (it considers HiDPI)"
     },
-    {"get-render-height", cfun_GetRenderHeight, 
-        "(get-render-height)\n\n" 
+    {
+        "get-render-height", cfun_GetRenderHeight,
+        "(get-render-height)\n\n"
         "Get current render height (it considers HiDPI)"
     },
-    {"get-monitor-count", cfun_GetMonitorCount, 
-        "(get-monitor-count)\n\n" 
+    {
+        "get-monitor-count", cfun_GetMonitorCount,
+        "(get-monitor-count)\n\n"
         "Get number of connected monitors"
     },
-    {"get-monitor-width", cfun_GetMonitorWidth, 
-        "(get-monitor-width monitor)\n\n" 
+    {
+        "get-monitor-width", cfun_GetMonitorWidth,
+        "(get-monitor-width monitor)\n\n"
         "Get specified monitor width (max available by monitor)"
     },
-    {"get-monitor-height", cfun_GetMonitorHeight, 
-        "(get-monitor-height monitor)\n\n" 
+    {
+        "get-monitor-height", cfun_GetMonitorHeight,
+        "(get-monitor-height monitor)\n\n"
         "Get specified monitor height (max available by monitor)"
     },
-    {"get-monitor-physical-width", cfun_GetMonitorPhysicalWidth, 
-        "(get-monitor-physical-width monitor)\n\n" 
+    {
+        "get-monitor-physical-width", cfun_GetMonitorPhysicalWidth,
+        "(get-monitor-physical-width monitor)\n\n"
         "Get specified monitor physical width in millimetres"
     },
-    {"get-monitor-physical-height", cfun_GetMonitorPhysicalHeight, 
-        "(get-monitor-physical-height monitor)\n\n" 
+    {
+        "get-monitor-physical-height", cfun_GetMonitorPhysicalHeight,
+        "(get-monitor-physical-height monitor)\n\n"
         "Get specified monitor physical height in millimetres"
     },
-    {"get-window-scale-dpi", cfun_GetWindowScaleDPI,
+    {
+        "get-window-scale-dpi", cfun_GetWindowScaleDPI,
         "(get-window-scale-dpi)\n\n"
         "Get window scale DPI factor"
     },
-    {"get-monitor-name", cfun_GetMonitorName, 
-        "(get-monitor-name monitor)\n\n" 
+    {
+        "get-monitor-name", cfun_GetMonitorName,
+        "(get-monitor-name monitor)\n\n"
         "Get the human-readable, UTF-8 encoded name of the primary monitor"
     },
-    {"get-clipboard-text", cfun_GetClipboardText, 
-        "(get-clipboard-text)\n\n" 
+    {
+        "get-clipboard-text", cfun_GetClipboardText,
+        "(get-clipboard-text)\n\n"
         "Get clipboard text content"
     },
-    {"set-clipboard-text", cfun_SetClipboardText, 
-        "(set-clipboard-text text)\n\n" 
+    {
+        "set-clipboard-text", cfun_SetClipboardText,
+        "(set-clipboard-text text)\n\n"
         "Set clipboard text content"
     },
-    {"enable-event-waiting", cfun_EnableEventWaiting, 
-        "(enable-event-waiting)\n\n" 
+    {
+        "get-clipboard-image", cfun_GetClipboardImage,
+        "(get-clipboard-image)\n\n"
+        "Get clipboard image content"
+    },
+    {
+        "enable-event-waiting", cfun_EnableEventWaiting,
+        "(enable-event-waiting)\n\n"
         "Enable waiting for events on EndDrawing(), no automatic event polling"
     },
-    {"disable-event-waiting", cfun_DisableEventWaiting, 
-        "(disable-event-waiting)\n\n" 
+    {
+        "disable-event-waiting", cfun_DisableEventWaiting,
+        "(disable-event-waiting)\n\n"
         "Disable waiting for events on EndDrawing(), automatic events polling"
     },
-    {"show-cursor", cfun_ShowCursor, 
-        "(show-cursor)\n\n" 
+    {
+        "show-cursor", cfun_ShowCursor,
+        "(show-cursor)\n\n"
         "Shows cursor"
     },
-    {"hide-cursor", cfun_HideCursor, 
-        "(hide-cursor)\n\n" 
+    {
+        "hide-cursor", cfun_HideCursor,
+        "(hide-cursor)\n\n"
         "Hides cursor"
     },
-    {"cursor-hidden?", cfun_IsCursorHidden, 
-        "(cursor-hidden?)\n\n" 
+    {
+        "cursor-hidden?", cfun_IsCursorHidden,
+        "(cursor-hidden?)\n\n"
         "Check if cursor is not visible"
     },
-    {"enable-cursor", cfun_EnableCursor, 
-        "(enable-cursor)\n\n" 
+    {
+        "enable-cursor", cfun_EnableCursor,
+        "(enable-cursor)\n\n"
         "Enables cursor (unlock cursor)"
     },
-    {"disable-cursor", cfun_DisableCursor, 
-        "(disable-cursor)\n\n" 
+    {
+        "disable-cursor", cfun_DisableCursor,
+        "(disable-cursor)\n\n"
         "Disables cursor (lock cursor)"
     },
-    {"cursor-on-screen?", cfun_IsCursorOnScreen, 
-        "(cursor-on-screen?)\n\n" 
+    {
+        "cursor-on-screen?", cfun_IsCursorOnScreen,
+        "(cursor-on-screen?)\n\n"
         "Check if cursor is on the screen"
     },
-    {"clear-background", cfun_ClearBackground, 
-        "(clear-background color)\n\n" 
+    {
+        "clear-background", cfun_ClearBackground,
+        "(clear-background color)\n\n"
         "Set background color (framebuffer clear color)"
     },
-    {"begin-drawing", cfun_BeginDrawing, 
-        "(begin-drawing)\n\n" 
+    {
+        "begin-drawing", cfun_BeginDrawing,
+        "(begin-drawing)\n\n"
         "Setup canvas (framebuffer) to start drawing"
     },
-    {"end-drawing", cfun_EndDrawing, 
-        "(end-drawing)\n\n" 
+    {
+        "end-drawing", cfun_EndDrawing,
+        "(end-drawing)\n\n"
         "End canvas drawing and swap buffers (double buffering)"
     },
-    {"begin-mode-2d", cfun_BeginMode2D, 
-        "(begin-mode-2d camera)\n\n" 
+    {
+        "begin-mode-2d", cfun_BeginMode2D,
+        "(begin-mode-2d camera)\n\n"
         "Begin 2D mode with custom camera (2D)"
     },
-    {"end-mode-2d", cfun_EndMode2D, 
-        "(end-mode-2d)\n\n" 
+    {
+        "end-mode-2d", cfun_EndMode2D,
+        "(end-mode-2d)\n\n"
         "Ends 2D mode with custom camera"
     },
-    {"set-target-fps", cfun_SetTargetFPS, 
-        "(set-target-fps fps)\n\n" 
+    {
+        "set-target-fps", cfun_SetTargetFPS,
+        "(set-target-fps fps)\n\n"
         "Set target FPS (maximum)"
     },
-    {"get-fps", cfun_GetFPS, 
-        "(get-fps)\n\n" 
+    {
+        "get-fps", cfun_GetFPS,
+        "(get-fps)\n\n"
         "Get current FPS"
     },
-    {"get-frame-time", cfun_GetFrameTime, 
-        "(get-frame-time)\n\n" 
+    {
+        "get-frame-time", cfun_GetFrameTime,
+        "(get-frame-time)\n\n"
         "Get time in seconds for last frame drawn (delta time)"
     },
-    {"get-time", cfun_GetTime, 
-        "(get-time)\n\n" 
+    {
+        "get-time", cfun_GetTime,
+        "(get-time)\n\n"
         "Get elapsed time in seconds since InitWindow()"
     },
-    {"set-config-flags", cfun_SetConfigFlags, 
-        "(set-config-flags flags)\n\n" 
+    {
+        "set-config-flags", cfun_SetConfigFlags,
+        "(set-config-flags flags)\n\n"
         "Setup init configuration flags (view FLAGS)"
     },
-    {"set-trace-log-level", cfun_SetTraceLogLevel, 
-        "(set-trace-log-level log-level)\n\n" 
+    {
+        "set-trace-log-level", cfun_SetTraceLogLevel,
+        "(set-trace-log-level log-level)\n\n"
         "Set the current threshold (minimum) log level"
     },
-    {"set-trace-log-callback", cfun_SetTraceLogCallback, 
-        "(set-trace-log-callback callback)\n\n" 
+    {
+        "set-trace-log-callback", cfun_SetTraceLogCallback,
+        "(set-trace-log-callback callback)\n\n"
         "Set custom trace log"
     },
-    {"trace-log", cfun_TraceLog, 
-        "(trace-log log-level text)\n\n" 
+    {
+        "trace-log", cfun_TraceLog,
+        "(trace-log log-level text)\n\n"
         "Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)"
     },
-    {"take-screenshot", cfun_TakeScreenshot, 
-        "(take-screenshot file-name)\n\n" 
+    {
+        "take-screenshot", cfun_TakeScreenshot,
+        "(take-screenshot file-name)\n\n"
         "Takes a screenshot of current screen (filename extension defines format)"
     },
-    {"key-pressed?", cfun_IsKeyPressed, 
-        "(key-pressed? key)\n\n" 
+    {
+        "key-pressed?", cfun_IsKeyPressed,
+        "(key-pressed? key)\n\n"
         "Check if a key has been pressed once"
     },
-    {"key-released?", cfun_IsKeyReleased, 
-        "(key-released? key)\n\n" 
+    {
+        "key-released?", cfun_IsKeyReleased,
+        "(key-released? key)\n\n"
         "Check if a key has been released once"
     },
-    {"key-up?", cfun_IsKeyUp, 
-        "(key-up? key)\n\n" 
+    {
+        "key-up?", cfun_IsKeyUp,
+        "(key-up? key)\n\n"
         "Check if a key is NOT being pressed"
     },
-    {"key-down?", cfun_IsKeyDown, 
-        "(key-down? key)\n\n" 
+    {
+        "key-down?", cfun_IsKeyDown,
+        "(key-down? key)\n\n"
         "Check if a key is being pressed"
     },
-    {"get-key-pressed", cfun_GetKeyPressed, 
-        "(get-key-pressed)\n\n" 
+    {
+        "get-key-pressed", cfun_GetKeyPressed,
+        "(get-key-pressed)\n\n"
         "Get key pressed (keycode), call it multiple times for keys "
         "queued, returns 0 when the queue is empty"
     },
-    {"get-char-pressed", cfun_GetCharPressed,
+    {
+        "get-char-pressed", cfun_GetCharPressed,
         "(get-char-pressed)\n\n"
         "Get char pressed (unicode), call it multiple times for chars "
         "queued, returns 0 when the queue is empty"
     },
-    {"set-exit-key", cfun_SetExitKey, 
-        "(set-exit-key key)\n\n" 
+    {
+        "set-exit-key", cfun_SetExitKey,
+        "(set-exit-key key)\n\n"
         "Set a custom key to exit program (default is ESC)"
     },
-    {"gamepad-available?", cfun_IsGamepadAvailable, 
-        "(gamepad-available? gamepad)\n\n" 
+    {
+        "gamepad-available?", cfun_IsGamepadAvailable,
+        "(gamepad-available? gamepad)\n\n"
         "Check if a gamepad is available"
     },
-    {"gamepad-button-down?", cfun_IsGamepadButtonDown, 
-        "(gamepad-button-down? gamepad button)\n\n" 
+    {
+        "gamepad-button-down?", cfun_IsGamepadButtonDown,
+        "(gamepad-button-down? gamepad button)\n\n"
         "Check if a gamepad button is being pressed"
     },
-    {"gamepad-button-up?", cfun_IsGamepadButtonUp, 
-        "(gamepad-button-up? gamepad button)\n\n" 
+    {
+        "gamepad-button-up?", cfun_IsGamepadButtonUp,
+        "(gamepad-button-up? gamepad button)\n\n"
         "Check if a gamepad button is NOT being pressed"
     },
-    {"gamepad-button-pressed?", cfun_IsGamepadButtonPressed, 
-        "(gamepad-button-pressed? gamepad button)\n\n" 
+    {
+        "gamepad-button-pressed?", cfun_IsGamepadButtonPressed,
+        "(gamepad-button-pressed? gamepad button)\n\n"
         "Check if a gamepad button has been pressed once"
     },
-    {"gamepad-button-released?", cfun_IsGamepadButtonReleased, 
-        "(gamepad-button-released? gamepad button)\n\n" 
+    {
+        "gamepad-button-released?", cfun_IsGamepadButtonReleased,
+        "(gamepad-button-released? gamepad button)\n\n"
         "Check if a gamepad button has been released once"
     },
-    {"get-gamepad-button-pressed", cfun_GetGamepadButtonPressed, 
-        "(get-gamepad-button-pressed)\n\n" 
+    {
+        "get-gamepad-button-pressed", cfun_GetGamepadButtonPressed,
+        "(get-gamepad-button-pressed)\n\n"
         "Get the last gamepad button pressed"
     },
-    {"get-gamepad-name", cfun_GetGamepadName, 
-        "(get-gamepad-name gamepad)\n\n" 
+    {
+        "get-gamepad-name", cfun_GetGamepadName,
+        "(get-gamepad-name gamepad)\n\n"
         "Get gamepad internal name id"
     },
-    {"get-gamepad-axis-count", cfun_GetGamepadAxisCount, 
-        "(get-gamepad-axis-count gamepad)\n\n" 
+    {
+        "get-gamepad-axis-count", cfun_GetGamepadAxisCount,
+        "(get-gamepad-axis-count gamepad)\n\n"
         "Get gamepad axis count for a gamepad"
     },
-    {"get-gamepad-axis-movement", cfun_GetGamepadAxisMovement, 
-        "(get-gamepad-axis-movement gamepad axis)\n\n" 
+    {
+        "get-gamepad-axis-movement", cfun_GetGamepadAxisMovement,
+        "(get-gamepad-axis-movement gamepad axis)\n\n"
         "Get axis movement value for a gamepad axis"
     },
-    {"mouse-button-pressed?", cfun_IsMouseButtonPressed, 
-        "(mouse-button-pressed? button)\n\n" 
+    {
+        "mouse-button-pressed?", cfun_IsMouseButtonPressed,
+        "(mouse-button-pressed? button)\n\n"
         "Check if a mouse button has been pressed once"
     },
-    {"mouse-button-up?", cfun_IsMouseButtonUp, 
-        "(mouse-button-up? button)\n\n" 
+    {
+        "mouse-button-up?", cfun_IsMouseButtonUp,
+        "(mouse-button-up? button)\n\n"
         "Check if a mouse button is NOT being pressed"
     },
-    {"mouse-button-released?", cfun_IsMouseButtonReleased, 
-        "(mouse-button-released? button)\n\n" 
+    {
+        "mouse-button-released?", cfun_IsMouseButtonReleased,
+        "(mouse-button-released? button)\n\n"
         "Check if a mouse button has been released once"
     },
-    {"mouse-button-down?", cfun_IsMouseButtonDown, 
-        "(mouse-button-down? button)\n\n" 
+    {
+        "mouse-button-down?", cfun_IsMouseButtonDown,
+        "(mouse-button-down? button)\n\n"
         "Check if a mouse button is being pressed"
     },
-    {"get-mouse-x", cfun_GetMouseX, 
-        "(get-mouse-x)\n\n" 
+    {
+        "get-mouse-x", cfun_GetMouseX,
+        "(get-mouse-x)\n\n"
         "Get mouse position X"
     },
-    {"get-mouse-y", cfun_GetMouseY, 
-        "(get-mouse-y)\n\n" 
+    {
+        "get-mouse-y", cfun_GetMouseY,
+        "(get-mouse-y)\n\n"
         "Get mouse position Y"
     },
-    {"get-mouse-position", cfun_GetMousePosition, 
-        "(get-mouse-position)\n\n" 
+    {
+        "get-mouse-position", cfun_GetMousePosition,
+        "(get-mouse-position)\n\n"
         "Get mouse position XY"
     },
-    {"set-mouse-position", cfun_SetMousePosition, 
-        "(set-mouse-position x y)\n\n" 
+    {
+        "set-mouse-position", cfun_SetMousePosition,
+        "(set-mouse-position x y)\n\n"
         "Set mouse position XY"
     },
-    {"set-mouse-offset", cfun_SetMouseOffset, 
-        "(set-mouse-offset offset-x offset-y)\n\n" 
+    {
+        "set-mouse-offset", cfun_SetMouseOffset,
+        "(set-mouse-offset offset-x offset-y)\n\n"
         "Set mouse offset"
     },
-    {"set-mouse-scale", cfun_SetMouseScale, 
-        "(set-mouse-scale scale-x scale-y)\n\n" 
+    {
+        "set-mouse-scale", cfun_SetMouseScale,
+        "(set-mouse-scale scale-x scale-y)\n\n"
         "Set mouse scaling"
     },
-    {"get-mouse-wheel-move", cfun_GetMouseWheelMove, 
-        "(get-mouse-wheel-move)\n\n" 
+    {
+        "get-mouse-wheel-move", cfun_GetMouseWheelMove,
+        "(get-mouse-wheel-move)\n\n"
         "Get mouse wheel movement Y"
     },
-    {"get-touch-x", cfun_GetTouchX, 
-        "(get-touch-x)\n\n" 
+    {
+        "get-touch-x", cfun_GetTouchX,
+        "(get-touch-x)\n\n"
         "Get touch position X for touch point 0 (relative to screen size)"
     },
-    {"get-touch-y", cfun_GetTouchY, 
-        "(get-touch-y)\n\n" 
+    {
+        "get-touch-y", cfun_GetTouchY,
+        "(get-touch-y)\n\n"
         "Get touch position Y for touch point 0 (relative to screen size)"
     },
-    {"get-touch-position", cfun_GetTouchPosition, 
-        "(get-touch-position index)\n\n" 
+    {
+        "get-touch-position", cfun_GetTouchPosition,
+        "(get-touch-position index)\n\n"
         "Get touch position XY for a touch point index (relative to screen size)"
     },
-    {"load-dropped-files", cfun_LoadDroppedFiles, 
-        "(load-dropped-files)\n\n" 
+    {
+        "load-dropped-files", cfun_LoadDroppedFiles,
+        "(load-dropped-files)\n\n"
         "Get dropped files names"
     },
-    {"unload-dropped-files", cfun_UnloadDroppedFiles, 
-        "(unload-dropped-files path)\n\n" 
+    {
+        "unload-dropped-files", cfun_UnloadDroppedFiles,
+        "(unload-dropped-files path)\n\n"
         "Clear dropped files paths buffer"
     },
-    {"open-url", cfun_OpenUrl, 
-        "(open-url url)\n\n" 
+    {
+        "open-url", cfun_OpenUrl,
+        "(open-url url)\n\n"
         "Open URL with default system browser (if available)"
     },
-    {"set-window-icon", cfun_SetWindowIcon, 
-        "(set-window-icon image)\n\n" 
+    {
+        "set-window-icon", cfun_SetWindowIcon,
+        "(set-window-icon image)\n\n"
         "Set icon for window"
     },
-    {"set-window-icons", cfun_SetWindowIcons, 
-        "(set-window-icons images)\n\n" 
+    {
+        "set-window-icons", cfun_SetWindowIcons,
+        "(set-window-icons images)\n\n"
         "Set icon for window (multiple images for different resolutions)"
     },
-    {"begin-mode-3d", cfun_BeginMode3D, 
-        "(begin-mode-3d camera)\n\n" 
+    {
+        "begin-mode-3d", cfun_BeginMode3D,
+        "(begin-mode-3d camera)\n\n"
         "Begin 3D mode with custom camera (3D)"
     },
-    {"end-mode-3d", cfun_EndMode3D, 
-        "(end-mode-3d)\n\n" 
+    {
+        "end-mode-3d", cfun_EndMode3D,
+        "(end-mode-3d)\n\n"
         "Ends 3D mode and returns to default 2D orthographic mode"
     },
-    {"begin-texture-mode", cfun_BeginTextureMode, 
-        "(begin-texture-mode target)\n\n" 
+    {
+        "begin-texture-mode", cfun_BeginTextureMode,
+        "(begin-texture-mode target)\n\n"
         "Begin drawing to render texture"
     },
-    {"end-texture-mode", cfun_EndTextureMode, 
-        "(end-texture-mode)\n\n" 
+    {
+        "end-texture-mode", cfun_EndTextureMode,
+        "(end-texture-mode)\n\n"
         "Ends drawing to render texture"
     },
-    {"camera-2d", cfun_Camera2D, 
-        "(camera-2d &opt :offset [x y] :target [x y] :rotation int :zoom float)\n\n" 
+    {
+        "camera-2d", cfun_Camera2D,
+        "(camera-2d &opt :offset [x y] :target [x y] :rotation int :zoom float)\n\n"
         "Instantiate a Camera2D. \n"
         " - :offset   = Camera offset (displacement from target) \n"
         " - :target   = Camera target (rotation and zoom origin) \n"
         " - :rotation = Camera rotation in degrees \n"
         " - :zoom     = Camera zoom (scaling), should be 1.0f by default \n"
     },
-    {"camera-3d", cfun_Camera3D, 
-        "(camera-3d :position [x y z] :target [x y z] :up [x y z] :fov-y float :projection int)\n\n" 
+    {
+        "camera-3d", cfun_Camera3D,
+        "(camera-3d :position [x y z] :target [x y z] :up [x y z] :fov-y float :projection int)\n\n"
         "Instantiate a Camera3D. \n"
         " - :position   = Camera position \n"
         " - :target     = Camera target it looks-at \n"
@@ -1303,23 +1453,52 @@ static JanetReg core_cfuns[] = {
         " - :fov-y      = Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic \n"
         " - :projection = Camera projection: CAMERA\\_PERSPECTIVE or CAMERA\\_ORTHOGRAPHIC \n"
     },
-    {"update-camera", cfun_UpdateCamera, 
-        "(update-camera camera mode)\n\n" 
+    {
+        "update-camera", cfun_UpdateCamera,
+        "(update-camera camera mode)\n\n"
         "Update camera position for selected mode."
     },
-    {"update-camera-pro", cfun_UpdateCameraPro, 
-        "(update-camera-pro camera movement rotation zoom)\n\n" 
+    {
+        "update-camera-pro", cfun_UpdateCameraPro,
+        "(update-camera-pro camera movement rotation zoom)\n\n"
         "Update camera movement/rotation.\n"
         "Movement and rotation should be vec3."
     },
-    {"begin-scissor-mode", cfun_BeginScissorMode,
+    {
+        "begin-scissor-mode", cfun_BeginScissorMode,
         "(begin-scissor-mode x y w h)\n\n"
         "Begins scissor mode, drawings outside the area will be cut off.\n"
         "Arguments specifies the area."
     },
-    {"end-scissor-mode", cfun_EndScissorMode,
+    {
+        "end-scissor-mode", cfun_EndScissorMode,
         "(end-scissor-mode)\n\n"
         "Ends scissor mode. See `begin-scissor-mode`."
+    },
+    {
+        "make-directory", cfun_MakeDirectory,
+        "(make-directory dirpath)\n\n"
+        "Creates directory, supporting recursive directory creation."
+    },
+    {
+        "compute-sha1", cfun_ComputeSHA1,
+        "(compute-sha1 data, datasize)\n\n"
+        "Computes SHA1 hash code."
+    },
+    {
+        "compute-crc32", cfun_ComputeCRC32,
+        "(compute-crc32 data, datasize)\n\n"
+        "Computes CRC32 hash code."
+    },
+    {
+        "compute-md5", cfun_ComputeMD5,
+        "(compute-md5 data, datasize)\n\n"
+        "Computes MD5 hash code."
+    },
+    {
+        "file-name-valid?", cfun_IsFileNameValid,
+        "(file-name-valid? filename)\n\n"
+        "Check if filename is valid for platform/OS."
     },
     {NULL, NULL, NULL}
 };

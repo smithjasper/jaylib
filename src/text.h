@@ -191,68 +191,84 @@ static Janet cfun_GetFontTexture(int32_t argc, Janet *argv) {
 }
 
 static JanetReg text_cfuns[] = {
-    {"get-font-default", cfun_GetFontDefault, 
-        "(get-font-default)\n\n" 
+    {
+        "get-font-default", cfun_GetFontDefault,
+        "(get-font-default)\n\n"
         "Get the default Font"
     },
-    {"load-font", cfun_LoadFont, 
+    {
+        "load-font", cfun_LoadFont,
         "(load-font file-name)\n\n"
         "Load font from file into GPU memory (VRAM)"
     },
-    {"font-valid?", cfun_IsFontValid,
+    {
+        "font-valid?", cfun_IsFontValid,
         "(font-valid? font)\n\n"
         "Check if a font is valid"
     },
-    {"load-font-ex", cfun_LoadFontEx,
+    {
+        "load-font-ex", cfun_LoadFontEx,
         "(load-font-ex file-name font-size &opt font-chars)\n\n"
         "Load font from file with extended parameters"
     },
-    {"load-font-from-memory", cfun_LoadFontFromMemory,
+    {
+        "load-font-from-memory", cfun_LoadFontFromMemory,
         "(load-font-from-memory file-type file-data data-size font-size font-chars)\n\n"
         "Load font from memory"
     },
-    {"unload-font", cfun_UnloadFont, 
-        "(unload-font font)\n\n" 
+    {
+        "unload-font", cfun_UnloadFont,
+        "(unload-font font)\n\n"
         "Unload Font from GPU memory (VRAM)"
     },
-    {"draw-fps", cfun_DrawFPS, 
-        "(draw-fps pos-x pos-y)\n\n" 
+    {
+        "draw-fps", cfun_DrawFPS,
+        "(draw-fps pos-x pos-y)\n\n"
         "Draw current FPS"
     },
-    {"draw-text", cfun_DrawText, 
-        "(draw-text text pos-x pos-y font-size color)\n\n" 
+    {
+        "draw-text", cfun_DrawText,
+        "(draw-text text pos-x pos-y font-size color)\n\n"
         "Draw text (using default font)"
     },
-    {"draw-text-ex", cfun_DrawTextEx, 
-        "(draw-text-ex font text [pos-x pos-y] font-size spacing tint)\n\n" 
+    {
+        "draw-text-ex", cfun_DrawTextEx,
+        "(draw-text-ex font text [pos-x pos-y] font-size spacing tint)\n\n"
         "Draw text using font and additional parameters"
     },
-    {"draw-text-pro", cfun_DrawTextPro,
+    {
+        "draw-text-pro", cfun_DrawTextPro,
         "(draw-text-pro font text [pos-x pos-y] [origin-x origin-y] rotation font-size spacing tint)\n\n"
         "Draw text using font and pro parameters (rotation)"
     },
-    {"draw-text-codepoint", cfun_DrawTextCodepoint,
+    {
+        "draw-text-codepoint", cfun_DrawTextCodepoint,
         "(draw-text-codepoint font codepoint [pos-x pos-y] font-size tint)\n\n"
         "Draw one character (codepoint)"
     },
-    {"draw-text-codepoints", cfun_DrawTextCodepoints,
+    {
+        "draw-text-codepoints", cfun_DrawTextCodepoints,
         "(draw-text-codepoints font codepoints [pos-x pos-y] font-size spacing tint)\n\n"
         "Draw multiple characters (codepoints)"
     },
-    {"measure-text", cfun_MeasureText, 
-        "(measure-text text font-size)\n\n" 
+    {
+        "measure-text", cfun_MeasureText,
+        "(measure-text text font-size)\n\n"
         "Measure string width for default font"
     },
-    {"measure-text-ex", cfun_MeasureTextEx, 
-        "(measure-text-ex font text font-size spacing)\n\n" 
+    {
+        "measure-text-ex", cfun_MeasureTextEx,
+        "(measure-text-ex font text font-size spacing)\n\n"
         "Measure string size for Font"
     },
-    {"get-glyph-index", cfun_GetGlyphIndex, 
-        "(get-glyph-index font codepoint)\n\n" 
+    {
+        "get-glyph-index", cfun_GetGlyphIndex,
+        "(get-glyph-index font codepoint)\n\n"
         "Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found"
     },
-    {"get-font-texture", cfun_GetFontTexture, 
-        "(get-font-texture font)\n\n" 
+    {
+        "get-font-texture", cfun_GetFontTexture,
+        "(get-font-texture font)\n\n"
         ""
     },
     {NULL, NULL, NULL}

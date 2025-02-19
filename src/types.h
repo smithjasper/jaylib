@@ -270,7 +270,7 @@ const struct named_color named_colors[] = {
     {"sky-blue", _SKYBLUE_},
     {"violet", _VIOLET_},
     {"white", _WHITE_},
-    {"yellow",_YELLOW_},
+    {"yellow", _YELLOW_},
 };
 
 static Color jaylib_getcolor(const Janet *argv, int32_t n) {
@@ -279,13 +279,15 @@ static Color jaylib_getcolor(const Janet *argv, int32_t n) {
     int32_t len = 0;
     if (janet_indexed_view(x, &els, &len)) {
         if (len == 3 || len == 4) {
-            uint8_t r = (uint8_t) (janet_getnumber(els, 0) * 255);
-            uint8_t g = (uint8_t) (janet_getnumber(els, 1) * 255);
-            uint8_t b = (uint8_t) (janet_getnumber(els, 2) * 255);
+            uint8_t r = (uint8_t)(janet_getnumber(els, 0) * 255);
+            uint8_t g = (uint8_t)(janet_getnumber(els, 1) * 255);
+            uint8_t b = (uint8_t)(janet_getnumber(els, 2) * 255);
             uint8_t a = (len == 4)
-                ? (uint8_t)(janet_getnumber(els, 3) * 255)
-                : 255;
-            return (Color) { r, g, b, a };
+                        ? (uint8_t)(janet_getnumber(els, 3) * 255)
+                        : 255;
+            return (Color) {
+                r, g, b, a
+            };
         } else {
             janet_panicf("expected 3 or 4 color components, got %d", len);
         }
@@ -331,7 +333,7 @@ static Vector2 jaylib_getvec2(const Janet *argv, int32_t n) {
     JanetView idx = janet_getindexed(argv, n);
     return (Vector2) {
         idx_getfloat(idx, 0),
-        idx_getfloat(idx, 1)
+                     idx_getfloat(idx, 1)
     };
 }
 
@@ -339,8 +341,8 @@ static Vector3 jaylib_getvec3(const Janet *argv, int32_t n) {
     JanetView idx = janet_getindexed(argv, n);
     return (Vector3) {
         idx_getfloat(idx, 0),
-        idx_getfloat(idx, 1),
-        idx_getfloat(idx, 2)
+                     idx_getfloat(idx, 1),
+                     idx_getfloat(idx, 2)
     };
 }
 
@@ -348,9 +350,9 @@ static Vector4 jaylib_getvec4(const Janet *argv, int32_t n) {
     JanetView idx = janet_getindexed(argv, n);
     return (Vector4) {
         idx_getfloat(idx, 0),
-        idx_getfloat(idx, 1),
-        idx_getfloat(idx, 2),
-        idx_getfloat(idx, 3)
+                     idx_getfloat(idx, 1),
+                     idx_getfloat(idx, 2),
+                     idx_getfloat(idx, 3)
     };
 }
 
@@ -358,9 +360,9 @@ static Rectangle jaylib_getrect(const Janet *argv, int32_t n) {
     JanetView idx = janet_getindexed(argv, n);
     return (Rectangle) {
         idx_getfloat(idx, 0),
-        idx_getfloat(idx, 1),
-        idx_getfloat(idx, 2),
-        idx_getfloat(idx, 3)
+                     idx_getfloat(idx, 1),
+                     idx_getfloat(idx, 2),
+                     idx_getfloat(idx, 3)
     };
 }
 
@@ -371,28 +373,30 @@ static Ray jaylib_getray(const Janet *argv, int32_t n) {
     }
     Vector3 p = jaylib_getvec3(idx.items, 0);
     Vector3 d = jaylib_getvec3(idx.items, 1);
-    return (Ray){ p, d };
+    return (Ray) {
+        p, d
+    };
 }
 
 static Matrix jaylib_getmatrix(const Janet *argv, int32_t n) {
     JanetView idx = janet_getindexed(argv, n);
     return (Matrix) {
         idx_getfloat(idx, 0),
-        idx_getfloat(idx, 1),
-        idx_getfloat(idx, 2),
-        idx_getfloat(idx, 3),
-        idx_getfloat(idx, 4),
-        idx_getfloat(idx, 5),
-        idx_getfloat(idx, 6),
-        idx_getfloat(idx, 7),
-        idx_getfloat(idx, 8),
-        idx_getfloat(idx, 9),
-        idx_getfloat(idx, 10),
-        idx_getfloat(idx, 11),
-        idx_getfloat(idx, 12),
-        idx_getfloat(idx, 13),
-        idx_getfloat(idx, 14),
-        idx_getfloat(idx, 15),
+                     idx_getfloat(idx, 1),
+                     idx_getfloat(idx, 2),
+                     idx_getfloat(idx, 3),
+                     idx_getfloat(idx, 4),
+                     idx_getfloat(idx, 5),
+                     idx_getfloat(idx, 6),
+                     idx_getfloat(idx, 7),
+                     idx_getfloat(idx, 8),
+                     idx_getfloat(idx, 9),
+                     idx_getfloat(idx, 10),
+                     idx_getfloat(idx, 11),
+                     idx_getfloat(idx, 12),
+                     idx_getfloat(idx, 13),
+                     idx_getfloat(idx, 14),
+                     idx_getfloat(idx, 15),
     };
 }
 
@@ -410,7 +414,7 @@ static NPatchInfo jaylib_getnpatchinfo(const Janet *argv, int32_t n) {
     JanetView idx = janet_getindexed(argv, n);
     Rectangle rect = jaylib_getrect(idx.items, 0);
 
-    return (NPatchInfo){
+    return (NPatchInfo) {
         rect,
         janet_unwrap_integer(idx.items[1]),
         janet_unwrap_integer(idx.items[2]),
@@ -456,18 +460,20 @@ static Janet jaylib_wrap_vec2(Vector2 x) {
 }
 
 static Vector2 jaylib_unwrap_vec2(const Janet val) {
-  JanetView view;
-  if (!janet_indexed_view(val, &view.items, &view.len)) {
-    janet_panic("expected vec to be an indexed type");
-  }
+    JanetView view;
+    if (!janet_indexed_view(val, &view.items, &view.len)) {
+        janet_panic("expected vec to be an indexed type");
+    }
 
-  if (view.len != 2) {
-    janet_panic("vec must have exactly 2 elements");
-  }
+    if (view.len != 2) {
+        janet_panic("vec must have exactly 2 elements");
+    }
 
-  float x = idx_getfloat(view, 0);
-  float y = idx_getfloat(view, 1);
-  return (Vector2) { x, y };
+    float x = idx_getfloat(view, 0);
+    float y = idx_getfloat(view, 1);
+    return (Vector2) {
+        x, y
+    };
 }
 
 static Janet jaylib_wrap_vec3(Vector3 x) {
@@ -497,7 +503,7 @@ static Shader *jaylib_getshader(const Janet *argv, int32_t n) {
     return ((Shader *)janet_getabstract(argv, n, &AT_Shader));
 };
 
-int texture2d_get(void* p, Janet key, Janet *out);
+int texture2d_get(void *p, Janet key, Janet *out);
 
 static const JanetAbstractType AT_Texture2D = {
     "jaylib/texture2d",
@@ -511,26 +517,26 @@ static Texture2D *jaylib_gettexture2d(const Janet *argv, int32_t n) {
     return ((Texture2D *)janet_getabstract(argv, n, &AT_Texture2D));
 }
 
-int texture2d_get(void* p, Janet key, Janet *out) {
-	Texture2D *texture = (Texture2D *) p;
-	
-	if (!janet_checktype(key, JANET_KEYWORD)) {
-		janet_panic("expected keyword");
-	}
+int texture2d_get(void *p, Janet key, Janet *out) {
+    Texture2D *texture = (Texture2D *) p;
 
-	const uint8_t *kw = janet_unwrap_keyword(key);
+    if (!janet_checktype(key, JANET_KEYWORD)) {
+        janet_panic("expected keyword");
+    }
 
-	if (!janet_cstrcmp(kw, "width")) {
-		*out = janet_wrap_integer(texture->width);
-		return 1;
-	}
-	
-	if (!janet_cstrcmp(kw, "height")) {
-		*out = janet_wrap_integer(texture->height);
-		return 1;
-	}
-	
-	return 0;
+    const uint8_t *kw = janet_unwrap_keyword(key);
+
+    if (!janet_cstrcmp(kw, "width")) {
+        *out = janet_wrap_integer(texture->width);
+        return 1;
+    }
+
+    if (!janet_cstrcmp(kw, "height")) {
+        *out = janet_wrap_integer(texture->height);
+        return 1;
+    }
+
+    return 0;
 }
 
 static const JanetAbstractType AT_Image = {
@@ -613,70 +619,70 @@ static Camera2D *jaylib_getcamera2d(const Janet *argv, int32_t n) {
 }
 
 int camera2d_get(void *p, Janet key, Janet *out) {
-  Camera2D *camera = (Camera2D *)p;
+    Camera2D *camera = (Camera2D *)p;
 
-  if (!janet_checktype(key, JANET_KEYWORD)) {
-    janet_panic("expected keyword");
-  }
+    if (!janet_checktype(key, JANET_KEYWORD)) {
+        janet_panic("expected keyword");
+    }
 
-  const uint8_t *kw = janet_unwrap_keyword(key);
+    const uint8_t *kw = janet_unwrap_keyword(key);
 
-  if (!janet_cstrcmp(kw, "target")) {
-    *out = jaylib_wrap_vec2(camera->target);
-    return 1;
-  }
+    if (!janet_cstrcmp(kw, "target")) {
+        *out = jaylib_wrap_vec2(camera->target);
+        return 1;
+    }
 
-  if (!janet_cstrcmp(kw, "offset")) {
-    *out = jaylib_wrap_vec2(camera->offset);
-    return 1;
-  }
+    if (!janet_cstrcmp(kw, "offset")) {
+        *out = jaylib_wrap_vec2(camera->offset);
+        return 1;
+    }
 
-  if (!janet_cstrcmp(kw, "rotation")) {
-    *out = janet_wrap_number(camera->rotation);
-    return 1;
-  }
+    if (!janet_cstrcmp(kw, "rotation")) {
+        *out = janet_wrap_number(camera->rotation);
+        return 1;
+    }
 
-  if (!janet_cstrcmp(kw, "zoom")) {
-    *out = janet_wrap_number(camera->zoom);
-    return 1;
-  }
+    if (!janet_cstrcmp(kw, "zoom")) {
+        *out = janet_wrap_number(camera->zoom);
+        return 1;
+    }
 
-  return 0;
+    return 0;
 }
 
 
 void camera2d_put(void *p, Janet key, Janet value) {
-  Camera2D *camera = (Camera2D *)p;
+    Camera2D *camera = (Camera2D *)p;
 
-  if (!janet_checktype(key, JANET_KEYWORD)) {
-    janet_panic("expected keyword key");
-  }
-
-  const uint8_t *kw = janet_unwrap_keyword(key);
-
-  if (!janet_cstrcmp(kw, "target")) {
-    camera->target = jaylib_unwrap_vec2(value);
-  }
-
-  if (!janet_cstrcmp(kw, "offset")) {
-    camera->offset = jaylib_unwrap_vec2(value);
-  }
-
-  if (!janet_cstrcmp(kw, "rotation")) {
-    if (!janet_checktype(value, JANET_NUMBER)) {
-      janet_panic("expected number value");
+    if (!janet_checktype(key, JANET_KEYWORD)) {
+        janet_panic("expected keyword key");
     }
 
-    camera->rotation = janet_unwrap_number(value);
-  }
+    const uint8_t *kw = janet_unwrap_keyword(key);
 
-  if (!janet_cstrcmp(kw, "zoom")) {
-    if (!janet_checktype(value, JANET_NUMBER)) {
-      janet_panic("expected number value");
+    if (!janet_cstrcmp(kw, "target")) {
+        camera->target = jaylib_unwrap_vec2(value);
     }
 
-    camera->zoom = janet_unwrap_number(value);
-  }
+    if (!janet_cstrcmp(kw, "offset")) {
+        camera->offset = jaylib_unwrap_vec2(value);
+    }
+
+    if (!janet_cstrcmp(kw, "rotation")) {
+        if (!janet_checktype(value, JANET_NUMBER)) {
+            janet_panic("expected number value");
+        }
+
+        camera->rotation = janet_unwrap_number(value);
+    }
+
+    if (!janet_cstrcmp(kw, "zoom")) {
+        if (!janet_checktype(value, JANET_NUMBER)) {
+            janet_panic("expected number value");
+        }
+
+        camera->zoom = janet_unwrap_number(value);
+    }
 }
 
 static const JanetAbstractType AT_Camera3D = {
@@ -744,7 +750,7 @@ static int jaylib_getmaterialmaptype(const Janet *argv, int32_t n) {
 }
 
 static Janet jaylib_wrap_raycollision(RayCollision rayCollision) {
-    JanetTable* table = janet_table(4);
+    JanetTable *table = janet_table(4);
     janet_table_put(table, janet_wrap_keyword("hit"), janet_wrap_boolean(rayCollision.hit));
     janet_table_put(table, janet_wrap_keyword("distance"), janet_wrap_number(rayCollision.distance));
     janet_table_put(table, janet_wrap_keyword("point"), jaylib_wrap_vec3(rayCollision.point));

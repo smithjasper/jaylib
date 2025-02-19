@@ -582,8 +582,8 @@ static Janet cfun_DrawBoundingBox(int32_t argc, Janet *argv) {
 
 static Janet cfun_DrawBillboard(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 5);
-    Camera* camera = jaylib_getcamera3d(argv, 0);
-    Texture2D* texture = jaylib_gettexture2d(argv, 1);
+    Camera *camera = jaylib_getcamera3d(argv, 0);
+    Texture2D *texture = jaylib_gettexture2d(argv, 1);
     Vector3 position = jaylib_getvec3(argv, 2);
     float size = (float) janet_getnumber(argv, 3);
     Color tint = jaylib_getcolor(argv, 4);
@@ -593,8 +593,8 @@ static Janet cfun_DrawBillboard(int32_t argc, Janet *argv) {
 
 static Janet cfun_DrawBillboardRec(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 6);
-    Camera* camera = jaylib_getcamera3d(argv, 0);
-    Texture2D* texture = jaylib_gettexture2d(argv, 1);
+    Camera *camera = jaylib_getcamera3d(argv, 0);
+    Texture2D *texture = jaylib_gettexture2d(argv, 1);
     Rectangle source = jaylib_getrect(argv, 2);
     Vector3 position = jaylib_getvec3(argv, 3);
     Vector2 size = jaylib_getvec2(argv, 4);
@@ -605,8 +605,8 @@ static Janet cfun_DrawBillboardRec(int32_t argc, Janet *argv) {
 
 static Janet cfun_DrawBillboardPro(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 9);
-    Camera* camera = jaylib_getcamera3d(argv, 0);
-    Texture2D* texture = jaylib_gettexture2d(argv, 1);
+    Camera *camera = jaylib_getcamera3d(argv, 0);
+    Texture2D *texture = jaylib_gettexture2d(argv, 1);
     Rectangle source = jaylib_getrect(argv, 2);
     Vector3 position = jaylib_getvec3(argv, 3);
     Vector3 up = jaylib_getvec3(argv, 4);
@@ -705,277 +705,345 @@ static Janet cfun_GetRayCollisionQuad(int32_t argc, Janet *argv) {
 }
 
 static JanetReg threed_cfuns[] = {
-    {"draw-line-3d", cfun_DrawLine3D, 
+    {
+        "draw-line-3d", cfun_DrawLine3D,
         "(draw-line-3d [start-x start-y start-z] [end-x end-y end-z] color)\n\n"
         "Draw a line in 3D world space"
     },
-    {"draw-point-3d", cfun_DrawPoint3D, 
+    {
+        "draw-point-3d", cfun_DrawPoint3D,
         "(draw-point-3d [center-x center-y center-z] color)\n\n"
         "Draw a point in 3D space, actually a small line"
     },
-    {"draw-circle-3d", cfun_DrawCircle3D, 
+    {
+        "draw-circle-3d", cfun_DrawCircle3D,
         "(draw-circle-3d [center-x center-y center-z] radius [rot-x rot-y rot-z] rotation-angle color)\n\n"
         "Draw a circle in 3D world space"
     },
-    {"draw-triangle-3d", cfun_DrawTriangle3D, 
+    {
+        "draw-triangle-3d", cfun_DrawTriangle3D,
         "(draw-triangle-3d v1 v2 v3 color)\n\n"
         "Draw a triangle in 3D world space"
     },
-    {"draw-triangle-strip-3d", cfun_DrawTriangleStrip3D, 
+    {
+        "draw-triangle-strip-3d", cfun_DrawTriangleStrip3D,
         "(draw-triangle-strip-3d points color)\n\n"
         "Draw a triangle strip in 3D world space"
     },
-    {"draw-cube", cfun_DrawCube, 
+    {
+        "draw-cube", cfun_DrawCube,
         "(draw-cube [center-x center-y center-z] width height length color)\n\n"
         "Draw cube"
     },
-    {"draw-cube-v", cfun_DrawCubeV, 
+    {
+        "draw-cube-v", cfun_DrawCubeV,
         "(draw-cube-v [center-x center-y center-z] [width height length] color)\n\n"
         "Draw cube (Vector version)"
     },
-    {"draw-cube-wires", cfun_DrawCubeWires, 
+    {
+        "draw-cube-wires", cfun_DrawCubeWires,
         "(draw-cube-wires [center-x center-y center-z] width height length color)\n\n"
         "Draw cube wires"
     },
-    {"draw-cube-wires-v", cfun_DrawCubeWiresV, 
+    {
+        "draw-cube-wires-v", cfun_DrawCubeWiresV,
         "(draw-cube-wires-v [center-x center-y center-z] [width height length] color)\n\n"
         "Draw cube wires (Vector version)"
     },
-    {"draw-grid", cfun_DrawGrid, 
+    {
+        "draw-grid", cfun_DrawGrid,
         "(draw-grid slices spacing)\n\n"
         "Draw a grid (centered at (0, 0, 0))"
     },
-    {"draw-sphere", cfun_DrawSphere, 
+    {
+        "draw-sphere", cfun_DrawSphere,
         "(draw-sphere [center-x center-y center-z] radius color)\n\n"
         "Draw sphere"
     },
-    {"draw-sphere-ex", cfun_DrawSphereEx, 
+    {
+        "draw-sphere-ex", cfun_DrawSphereEx,
         "(draw-sphere-ex [center-x center-y center-z] radius rings slices color)\n\n"
         "Draw sphere with extended parameters"
     },
-    {"draw-sphere-wires", cfun_DrawSphereWires, 
+    {
+        "draw-sphere-wires", cfun_DrawSphereWires,
         "(draw-sphere-wires [center-x center-y center-z] radius rings slices color)\n\n"
         "Draw sphere wires"
     },
-    {"draw-cylinder", cfun_DrawCylinder, 
+    {
+        "draw-cylinder", cfun_DrawCylinder,
         "(draw-cylinder [center-x center-y center-z] radius-top radius-bottom height slices color)\n\n"
         "Draw a cylinder/cone"
     },
-    {"draw-cylinder-ex", cfun_DrawCylinderEx, 
+    {
+        "draw-cylinder-ex", cfun_DrawCylinderEx,
         "(draw-cylinder-ex start-pos end-pos start-radius end-radius sides color)\n\n"
         "Draw a cylinder with base at startPos and top at endPos"
     },
-    {"draw-cylinder-wires", cfun_DrawCylinderWires, 
+    {
+        "draw-cylinder-wires", cfun_DrawCylinderWires,
         "(draw-cylinder-wires [center-x center-y center-z] radius-top radius-bottom height slices color)\n\n"
         "Draw a cylinder/cone wires"
     },
-    {"draw-cylinder-wires-ex", cfun_DrawCylinderWiresEx, 
+    {
+        "draw-cylinder-wires-ex", cfun_DrawCylinderWiresEx,
         "(draw-cylinder-wires-ex start-pos end-pos start-radius end-radius sides color)\n\n"
         "Draw a cylinder wires with base at startPos and top at endPos"
     },
-    {"draw-plane", cfun_DrawPlane, 
+    {
+        "draw-plane", cfun_DrawPlane,
         "(draw-plane [center-x center-y center-z] [height width] color)\n\n"
         "Draw a plane XZ"
     },
-    {"draw-ray", cfun_DrawRay, 
+    {
+        "draw-ray", cfun_DrawRay,
         "(draw-ray ray color)\n\n"
         "Draw a ray line"
     },
-    {"draw-mesh", cfun_DrawMesh,
+    {
+        "draw-mesh", cfun_DrawMesh,
         "(draw-mesh mesh material transform)\n\n"
-        "Draw a mesh with material and transform"    
+        "Draw a mesh with material and transform"
     },
-    {"draw-mesh-instanced", cfun_DrawMeshInstanced,
+    {
+        "draw-mesh-instanced", cfun_DrawMeshInstanced,
         "(draw-mesh-instanced mesh material transforms)\n\n"
-        "Draw multiple mesh instances with material and different transforms"    
+        "Draw multiple mesh instances with material and different transforms"
     },
-    {"load-materials", cfun_LoadMaterials,
+    {
+        "load-materials", cfun_LoadMaterials,
         "(load-materials filename)\n\n"
         "Load materials from model file"
     },
-    {"load-material-default", cfun_LoadMaterialDefault,
+    {
+        "load-material-default", cfun_LoadMaterialDefault,
         "(load-material-default)\n\n"
-        "Load and return the default material"    
+        "Load and return the default material"
     },
-    {"material-valid?", cfun_IsMaterialValid,
+    {
+        "material-valid?", cfun_IsMaterialValid,
         "(material-valid? material)\n\n"
         "Checks if a material is valid"
     },
-    {"unload-material", cfun_UnloadMaterial,
+    {
+        "unload-material", cfun_UnloadMaterial,
         "(unload-material material)\n\n"
-        "Unload material from GPU memory (VRAM)"    
+        "Unload material from GPU memory (VRAM)"
     },
-    {"set-material-texture", cfun_SetMaterialTexture,
+    {
+        "set-material-texture", cfun_SetMaterialTexture,
         "(set-material-texture material map-type texture)\n\n"
-        "Set texture for a material map type (:diffuse, :specular...)"    
+        "Set texture for a material map type (:diffuse, :specular...)"
     },
-    {"set-model-mesh-material", cfun_SetModelMeshMaterial,
+    {
+        "set-model-mesh-material", cfun_SetModelMeshMaterial,
         "(set-model-mesh-material model mesh-id material-id)\n\n"
-        "Set material for a mesh"    
+        "Set material for a mesh"
     },
-    {"gen-mesh-poly", cfun_GenMeshPoly,
+    {
+        "gen-mesh-poly", cfun_GenMeshPoly,
         "(gen-mesh-poly sides radius)\n\n"
-        "Generate a polygonal mesh with given number of sides and radius"    
+        "Generate a polygonal mesh with given number of sides and radius"
     },
-    {"gen-mesh-plane", cfun_GenMeshPlane,
+    {
+        "gen-mesh-plane", cfun_GenMeshPlane,
         "(gen-mesh-plane width length res-x res-y)\n\n"
-        "Generate a plane mesh with given dimensions and subdivisions"    
+        "Generate a plane mesh with given dimensions and subdivisions"
     },
-    {"gen-mesh-cube", cfun_GenMeshCube,
+    {
+        "gen-mesh-cube", cfun_GenMeshCube,
         "(gen-mesh-cube width height length)\n\n"
-        "Generate a cube mesh with given dimensions"    
+        "Generate a cube mesh with given dimensions"
     },
-    {"gen-mesh-sphere", cfun_GenMeshSphere,
+    {
+        "gen-mesh-sphere", cfun_GenMeshSphere,
         "(gen-mesh-sphere radius rings slices)\n\n"
-        "Generate a sphere mesh with given dimensions"    
+        "Generate a sphere mesh with given dimensions"
     },
-    {"gen-mesh-hemisphere", cfun_GenMeshHemiSphere,
+    {
+        "gen-mesh-hemisphere", cfun_GenMeshHemiSphere,
         "(gen-mesh-hemisphere radius rings slices)\n\n"
-        "Generate a hemisphere mesh with given dimensions (no bottom cap)"    
+        "Generate a hemisphere mesh with given dimensions (no bottom cap)"
     },
-    {"gen-mesh-cylinder", cfun_GenMeshCylinder,
+    {
+        "gen-mesh-cylinder", cfun_GenMeshCylinder,
         "(gen-mesh-cylinder radius height slices)\n\n"
-        "Generate a cylinder mesh with given dimensions"    
+        "Generate a cylinder mesh with given dimensions"
     },
-    {"gen-mesh-cone", cfun_GenMeshCone,
+    {
+        "gen-mesh-cone", cfun_GenMeshCone,
         "(gen-mesh-cone radius height slices)\n\n"
-        "Generate a cone mesh with given dimensions"    
+        "Generate a cone mesh with given dimensions"
     },
-    {"gen-mesh-torus", cfun_GenMeshTorus,
+    {
+        "gen-mesh-torus", cfun_GenMeshTorus,
         "(gen-mesh-torus radius size rad-seg sides)\n\n"
-        "Generate a torus mesh with given dimensions"    
+        "Generate a torus mesh with given dimensions"
     },
-    {"gen-mesh-knot", cfun_GenMeshKnot,
+    {
+        "gen-mesh-knot", cfun_GenMeshKnot,
         "(gen-mesh-knot radius size rad-seg sides)\n\n"
-        "Generate a trefoil knot mesh with given dimensions"    
+        "Generate a trefoil knot mesh with given dimensions"
     },
-    {"gen-mesh-heightmap", cfun_GenMeshHeightmap,
+    {
+        "gen-mesh-heightmap", cfun_GenMeshHeightmap,
         "(gen-mesh-heightmap image size)\n\n"
-        "Generate a heightmap mesh from image data and size (vec3)"    
+        "Generate a heightmap mesh from image data and size (vec3)"
     },
-    {"gen-mesh-cubicmap", cfun_GenMeshCubicmap,
+    {
+        "gen-mesh-cubicmap", cfun_GenMeshCubicmap,
         "(gen-mesh-cubicmap image size)\n\n"
-        "Generate a cubicmap mesh from image data and size (vec3)"    
+        "Generate a cubicmap mesh from image data and size (vec3)"
     },
-    {"load-model", cfun_LoadModel,
+    {
+        "load-model", cfun_LoadModel,
         "(load-model filename)\n\n"
-        "Load model from files (meshes and materials)"    
+        "Load model from files (meshes and materials)"
     },
-    {"model-valid?", cfun_IsModelValid,
+    {
+        "model-valid?", cfun_IsModelValid,
         "(model-valid? model)\n\n"
         "Checks if a model is valid"
     },
-    {"load-model-from-mesh", cfun_LoadModelFromMesh,
+    {
+        "load-model-from-mesh", cfun_LoadModelFromMesh,
         "(load-model-from-mesh mesh)\n\n"
-        "Load model from generated mesh (default material)"    
+        "Load model from generated mesh (default material)"
     },
-    {"unload-model", cfun_UnloadModel,
+    {
+        "unload-model", cfun_UnloadModel,
         "(unload-model model)\n\n"
-        "Unload model (including meshes) from memory (RAM and/or VRAM)"    
+        "Unload model (including meshes) from memory (RAM and/or VRAM)"
     },
-    {"get-model-bounding-box", cfun_GetModelBoundingBox,
+    {
+        "get-model-bounding-box", cfun_GetModelBoundingBox,
         "(get-model-bounding-box model)\n\n"
-        "Compute model bounding box limits (considers all meshes). Returns [[min-x min-y min-z] [max-x max-y max-z]]"    
+        "Compute model bounding box limits (considers all meshes). Returns [[min-x min-y min-z] [max-x max-y max-z]]"
     },
-    {"export-mesh", cfun_ExportMesh,
+    {
+        "export-mesh", cfun_ExportMesh,
         "(export-mesh mesh filename)\n\n"
-        "Export mesh data to file, returns true on success"    
+        "Export mesh data to file, returns true on success"
     },
-    {"upload-mesh", cfun_UploadMesh,
+    {
+        "upload-mesh", cfun_UploadMesh,
         "(upload-mesh mesh dynamic)\n\n"
-        "Upload mesh vertex data in GPU and provide VAO/VBO ids"    
+        "Upload mesh vertex data in GPU and provide VAO/VBO ids"
     },
-    {"unload-mesh", cfun_UnloadMesh,
+    {
+        "unload-mesh", cfun_UnloadMesh,
         "(unload-mesh mesh)\n\n"
-        "Unload mesh data from CPU and GPU"    
+        "Unload mesh data from CPU and GPU"
     },
-    {"load-model-animations", cfun_LoadModelAnimations,
+    {
+        "load-model-animations", cfun_LoadModelAnimations,
         "(load-model-animations file-name)\n\n"
-        "Load model animations from file"    
+        "Load model animations from file"
     },
-    {"update-model-animation", cfun_UpdateModelAnimation,
+    {
+        "update-model-animation", cfun_UpdateModelAnimation,
         "(update-model-animation model anim frame)\n\n"
-        "Update model animation pose"    
+        "Update model animation pose"
     },
-    {"unload-model-animation", cfun_UnloadModelAnimation,
+    {
+        "unload-model-animation", cfun_UnloadModelAnimation,
         "(unload-model-animation anim)\n\n"
-        "Unload animation data"    
+        "Unload animation data"
     },
-    {"unload-model-animations", cfun_UnloadModelAnimations,
+    {
+        "unload-model-animations", cfun_UnloadModelAnimations,
         "(unload-model-animations anims)\n\n"
-        "Unload animation array data"    
+        "Unload animation array data"
     },
-    {"is-model-animation-valid", cfun_IsModelAnimationValid,
+    {
+        "is-model-animation-valid", cfun_IsModelAnimationValid,
         "(is-model-animation-valid model anim)\n\n"
-        "Check model animation skeleton match"    
+        "Check model animation skeleton match"
     },
-    {"get-mesh-bounding-box", cfun_GetMeshBoundingBox,
+    {
+        "get-mesh-bounding-box", cfun_GetMeshBoundingBox,
         "(get-mesh-bounding-box mesh)\n\n"
-        "Compute mesh bounding box limits. Returns [[min-x min-y min-z] [max-x max-y max-z]]"    
+        "Compute mesh bounding box limits. Returns [[min-x min-y min-z] [max-x max-y max-z]]"
     },
-    {"gen-mesh-tangents", cfun_GenMeshTangents,
+    {
+        "gen-mesh-tangents", cfun_GenMeshTangents,
         "(gen-mesh-tangents mesh)\n\n"
-        "Compute mesh tangents"    
+        "Compute mesh tangents"
     },
-    {"draw-model", cfun_DrawModel,
+    {
+        "draw-model", cfun_DrawModel,
         "(draw-model model position scale tint)\n\n"
-        "Draw a model (with texture if set)"    
+        "Draw a model (with texture if set)"
     },
-    {"draw-model-ex", cfun_DrawModelEx,
+    {
+        "draw-model-ex", cfun_DrawModelEx,
         "(draw-model-ex model position rotation-axis rotation-angle scale tint)\n\n"
-        "Draw a model with extended parameters"    
+        "Draw a model with extended parameters"
     },
-    {"draw-model-wires", cfun_DrawModelWires,
+    {
+        "draw-model-wires", cfun_DrawModelWires,
         "(draw-model-wires model position scale tint)\n\n"
-        "Draw a model wires (with texture if set)"    
+        "Draw a model wires (with texture if set)"
     },
-    {"draw-model-wires-ex", cfun_DrawModelWiresEx,
+    {
+        "draw-model-wires-ex", cfun_DrawModelWiresEx,
         "(draw-model-wires-ex model position rotation-axis rotation-angle scale tint)\n\n"
-        "Draw a model wires (with texture if set) with extended parameters"    
+        "Draw a model wires (with texture if set) with extended parameters"
     },
-    {"draw-billboard", cfun_DrawBillboard,
+    {
+        "draw-billboard", cfun_DrawBillboard,
         "(draw-billboard camera texture position size tint)\n\n"
-        "Draw a billboard texture"    
+        "Draw a billboard texture"
     },
-    {"draw-billboard-rec", cfun_DrawBillboardRec,
+    {
+        "draw-billboard-rec", cfun_DrawBillboardRec,
         "(draw-billboard-rec camera texture source position size tint)\n\n"
-        "Draw a billboard texture defined by source"    
+        "Draw a billboard texture defined by source"
     },
-    {"draw-billboard-pro", cfun_DrawBillboardPro,
+    {
+        "draw-billboard-pro", cfun_DrawBillboardPro,
         "(draw-billboard-pro camera texture source position up size origin rotation tint)\n\n"
-        "Draw a billboard texture defined by source and rotation"    
+        "Draw a billboard texture defined by source and rotation"
     },
-    {"check-collision-spheres", cfun_CheckCollisionSpheres,
+    {
+        "check-collision-spheres", cfun_CheckCollisionSpheres,
         "(check-collision-spheres center1 radius1 center2 radius2)\n\n"
-        "Check collision between two spheres"    
+        "Check collision between two spheres"
     },
-    {"check-collision-boxes", cfun_CheckCollisionBoxes,
+    {
+        "check-collision-boxes", cfun_CheckCollisionBoxes,
         "(check-collision-boxes box1 box2)\n\n"
-        "Check collision between two bounding boxes"    
+        "Check collision between two bounding boxes"
     },
-    {"check-collision-box-sphere", cfun_CheckCollisionBoxSphere,
+    {
+        "check-collision-box-sphere", cfun_CheckCollisionBoxSphere,
         "(check-collision-box-sphere box center radius)\n\n"
-        "Check collision between box and sphere"    
+        "Check collision between box and sphere"
     },
-    {"get-ray-collision-sphere", cfun_GetRayCollisionSphere,
+    {
+        "get-ray-collision-sphere", cfun_GetRayCollisionSphere,
         "(get-ray-collision-sphere ray center radius)\n\n"
-        "Get collision info between ray and sphere"    
+        "Get collision info between ray and sphere"
     },
-    {"get-ray-collision-box", cfun_GetRayCollisionBox,
+    {
+        "get-ray-collision-box", cfun_GetRayCollisionBox,
         "(get-ray-collision-box ray box)\n\n"
-        "Get collision info between ray and box"    
+        "Get collision info between ray and box"
     },
-    {"get-ray-collision-mesh", cfun_GetRayCollisionMesh,
+    {
+        "get-ray-collision-mesh", cfun_GetRayCollisionMesh,
         "(get-ray-collision-mesh ray mesh transform)\n\n"
-        "Get collision info between ray and mesh"    
+        "Get collision info between ray and mesh"
     },
-    {"get-ray-collision-triangle", cfun_GetRayCollisionTriangle,
+    {
+        "get-ray-collision-triangle", cfun_GetRayCollisionTriangle,
         "(get-ray-collision-triangle ray p1 p2 p3)\n\n"
-        "Get collision info between ray and triangle"    
+        "Get collision info between ray and triangle"
     },
-    {"get-ray-collision-quad", cfun_GetRayCollisionQuad,
+    {
+        "get-ray-collision-quad", cfun_GetRayCollisionQuad,
         "(get-ray-collision-quad ray p1 p2 p3 p4)\n\n"
-        "Get collision info between ray and quad"    
+        "Get collision info between ray and quad"
     },
     {NULL, NULL, NULL}
 };
