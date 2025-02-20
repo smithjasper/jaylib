@@ -1009,6 +1009,36 @@ static Janet cfun_GetFileNameWithoutExt(int32_t argc, Janet *argv) {
     return janet_wrap_string(GetFileNameWithoutExt(filepath));
 }
 
+static Janet cfun_LoadRandomSequence(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 3);
+    unsigned int count = janet_getinteger(argv, 0);
+    int min = janet_getinteger(argv, 1);
+    int max = janet_getinteger(argv, 2);
+    int *sequence = LoadRandomSequence(count, min, max);
+    JanetArray *array = janet_array(0);
+    for (int i = 0; i < count; ++i) {
+        janet_array_push(array, janet_wrap_integer(sequence[i]));
+    }
+}
+
+static Janet cfun_ExportDataAsCode(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 3);
+    const unsigned char *data = janet_getcstring(argv, 0);
+    int datasize = janet_getinteger(argv, 1);
+    const char *filename = janet_getcstring(argv, 2);
+    return janet_wrap_boolean(ExportDataAsCode(data, datasize, filename));
+}
+
+static Janet cfun_SetGamepadVibration(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 4);
+    int gamepad = janet_getinteger(argv, 0);
+    float leftmotor = janet_getnumber(argv, 1);
+    float rightmotor = janet_getnumber(argv, 2);
+    float duration = janet_getnumber(argv, 3);
+    SetGamepadVibration(gamepad, leftmotor, rightmotor, duration);
+    return janet_wrap_nil();
+}
+
 static JanetReg core_cfuns[] = {
     {
         "init-window", cfun_InitWindow,
@@ -1555,7 +1585,7 @@ static JanetReg core_cfuns[] = {
     },
     {
         "get-application-directory", cfun_GetApplicationDirectory,
-        "(get-application-directory)\n\n",
+        "(get-application-directory)\n\n"
         "Get the directory of the running application."
     },
     {
@@ -1567,6 +1597,11 @@ static JanetReg core_cfuns[] = {
         "get-file-name-without-ext", cfun_GetFileNameWithoutExt,
         "(get-file-name-without-ext filepath)\n\n"
         "Get filename string without extension."
+    },
+    {
+        "load-random-sequence", cfun_LoadRandomSequence,
+        "(load-random-sequence count min max)\n\n"
+        "Load random values sequence, no values repeated, min and max included."
     },
     {NULL, NULL, NULL}
 };
