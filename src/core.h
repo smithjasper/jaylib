@@ -1039,6 +1039,46 @@ static Janet cfun_SetGamepadVibration(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
+static Janet cfun_GetWindowPosition(int32_t argc, Janet *argv) {
+    (void)argv;
+    janet_fixarity(argc, 0);
+    Vector2 position = GetWindowPosition();
+    return jaylib_wrap_vec2(position);
+}
+
+static Janet cfun_ToggleBorderlessWindowed(int32_t argc, Janet *argv) {
+    (void)argv;
+    janet_fixarity(argc, 0);
+    ToggleBorderlessWindowed();
+    return janet_wrap_nil();
+}
+
+static Janet cfun_SetMouseCursor(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 1);
+    int cursor = janet_getinteger(argv, 0);
+    SetMouseCursor(cursor);
+    janet_wrap_nil();
+}
+
+static Janet cfun_GetWorkingDirectory(int32_t argc, Janet *argv) {
+    (void)argv;
+    janet_fixarity(argc, 0);
+    return janet_wrap_string(GetWorkingDirectory());
+}
+
+static Janet cfun_IsKeyPressedRepeat(int argc, Janet *argv) {
+    janet_fixarity(argc, 1);
+    int key = jaylib_getkey(argv, 0);
+    return janet_wrap_boolean(IsKeyPressedRepeat(key));
+}
+
+static Janet cfun_PollInputEvents(int32_t argc, Janet *argv) {
+    (void)argv;
+    janet_fixarity(argc, 0);
+    PollInputEvents();
+    return janet_wrap_nil();
+}
+
 static JanetReg core_cfuns[] = {
     {
         "init-window", cfun_InitWindow,
@@ -1602,6 +1642,36 @@ static JanetReg core_cfuns[] = {
         "load-random-sequence", cfun_LoadRandomSequence,
         "(load-random-sequence count min max)\n\n"
         "Load random values sequence, no values repeated, min and max included."
+    },
+    {
+        "get-window-position", cfun_GetWindowPosition,
+        "(get-window-position)\n\n"
+        "Get window position XY on monitor."
+    },
+    {
+        "toggle-borderless-windowed", cfun_LoadRandomSequence,
+        "(toggle-borderless-windowed)\n\n"
+        "Toggle window state."
+    },
+    {
+        "set-mouse-cursor", cfun_SetMouseCursor,
+        "(set-mouse-cursor cursor)\n\n"
+        "Set mouse cursor."
+    },
+    {
+        "get-working-directory", cfun_GetWorkingDirectory,
+        "(get-working-directory)\n\n"
+        "Get current working directory."
+    },
+    {
+        "key-pressed-repeat?", cfun_IsKeyPressedRepeat,
+        "(key-pressed-repeat?)\n\n"
+        "Check if a key has been pressed again."
+    },
+    {
+        "poll-input-events", cfun_PollInputEvents,
+        "(poll-input-events?)\n\n"
+        "Register all input events."
     },
     {NULL, NULL, NULL}
 };
