@@ -27,6 +27,9 @@
 [x] const char *GetMonitorName(int monitor)
 [x] const char *GetClipboardText(void)
 [x] void SetClipboardText(const char *text)
+[x] Vector2 GetWindowPosition(void)
+[x] void ToggleBorderlessWindowed(void)
+[x] Image GetClipboardImage(void)
 
 // Cursor-related functions
 [x] void ShowCursor(void)
@@ -35,6 +38,7 @@
 [x] void EnableCursor(void)
 [x] void DisableCursor(void)
 [x] bool IsCursorOnScreen(void)
+[x] void SetMouseCursor(int cursor)
 
 // Drawing-related functions
 [x] void ClearBackground(Color color)
@@ -51,6 +55,8 @@
 [ ] Ray GetMouseRay(Vector2 mousePosition, Camera camera)
 [ ] Vector2 GetWorldToScreen(Vector3 position, Camera camera)
 [ ] Matrix GetCameraMatrix(Camera camera)
+[x] Ray GetScreenToWorldRay(Vector2 position, Camera camera)
+[x] Ray GetScreenToWorldRayEx(Vector2 position, Camera camera, int width, int height)
 
 // Timing-related functions
 [x] void SetTargetFPS(int fps)
@@ -72,6 +78,17 @@
 [x] void SetTraceLogCallback(TraceLogCallback callback)
 [x] void TraceLog(int logType, const char *text, ...)
 [x] void TakeScreenshot(const char *fileName)
+[x] const char *GetWorkingDirectory(void)
+[x] int MakeDirectory(const char *dirPath)
+[x] int *ComputeSHA1(unsigned char *data, int dataSize)
+[x] int *ComputeCRC32(unsigned char *data, int dataSize)
+[x] int *ComputeMD5(unsigned char *data, int dataSize)
+[x] const char *GetApplicationDirectory(void)
+[x] FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, nool scanSubdirs)
+[x] const char *GetFileNameWithoutExt(const char *filePath)
+[x] int *LoadRandomSequence(unsigned int count, int min, int max)
+[x] bool ExportDataAsCode(unsigned char *data, int dataSize, const char *fileName)
+[x] void PollInputEvents(void)
 
 // Files management functions
 [x] char **GetDroppedFiles(int *count)
@@ -94,6 +111,7 @@
 [x] bool IsKeyUp(int key)
 [x] int GetKeyPressed(void)
 [x] void SetExitKey(int key)
+[x] bool IsKeyPressedRepeat(int key)
 
 // Input-related functions: gamepads
 [x] bool IsGamepadAvailable(int gamepad)
@@ -106,6 +124,7 @@
 [x] int GetGamepadButtonPressed(void)
 [x] int GetGamepadAxisCount(int gamepad)
 [x] float GetGamepadAxisMovement(int gamepad, int axis)
+[x] void SetGamepadVibration(int gamepad, float leftmotor, float rightmotor, float duration)
 
 // Input-related functions: mouse
 [x] bool IsMouseButtonPressed(int button)
